@@ -1,17 +1,78 @@
+/* 1. IMPORTS MUST BE FIRST */
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Outline&family=Pixelify+Sans:wght@400..700&family=Tiny5&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
 
+/* 2. Font Face Declarations */
 @font-face {
-  font-family: 'BrickSans'; /* You name it whatever you want here */
+  font-family: 'BrickSans';
   src: url('./assets/fonts/NTBrickSans.otf') format('opentype');
   font-weight: bold;
   font-style: normal;
 }
 
-@import "tailwindcss";
-@import "tw-animate-css";
+@font-face {
+  font-family: 'Neoneon';
+  src: url('./assets/fonts/Neoneon.otf') format('opentype'); 
+  font-weight: normal;
+  font-style: normal;
+}
 
+/* 3. Custom Font Utility Classes */
+.tiny5-regular {
+  font-family: "Tiny5", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.pixelify-sans-regular {
+  font-family: "Pixelify Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100; 
+  font-style: normal;
+}
+
+.pixelify-sans-bold {
+  font-family: "Pixelify Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.bungee-outline-regular {
+  font-family: "Bungee Outline", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 4. Tailwind Configuration */
 @custom-variant dark (&:is(.dark *));
 
+@keyframes subtle-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  
+  @keyframes soft-pulse {
+    0%, 100% { opacity: 0.4; filter: brightness(1); }
+    50% { opacity: 0.8; filter: brightness(1.3); }
+  }
+
+  .animate-subtle-float {
+    animation: subtle-float 4s ease-in-out infinite;
+  }
+  
+  .animate-soft-pulse {
+    animation: soft-pulse 3s ease-in-out infinite;
+  }
+
 @theme inline {
+  /* Add your fonts here to use them with Tailwind classes like font-tiny5 */
+  --font-tiny5: "Tiny5", sans-serif;
+  --font-pixelify: "Pixelify Sans", sans-serif;
+  --font-brick: "BrickSans", sans-serif;
+  --font-neoneon: "Neoneon", sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -52,6 +113,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* 5. CSS Variables */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
