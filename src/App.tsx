@@ -75,13 +75,6 @@ const HollowText = ({ children, className = "", size = "text-5xl" }: { children:
   )
 }
 
-const ProjectFolderIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 11V14.5C2 17.5 2 17.5 5 17.5H19C22 17.5 22 17.5 22 14.5V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M2 11V8.2C2 6.52 2 6.52 3.33333 6.52H6.88889C7.86667 6.52 8.35556 6.52 8.71111 6.24L9.82222 5.28C10.1778 5 10.6667 5 11.6444 5H18C20.6667 5 22 5 22 7.24V11H2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
 function App() {
 
   const maxIndex = 2;
