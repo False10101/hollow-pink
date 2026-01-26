@@ -360,7 +360,7 @@ function App() {
               </div>
 
               {/* 1. UP Arrow: EIDOLON (Fixed: Centered Horizontally, Lowered Vertically) */}
-              <a href="#eidolon" className='group absolute w-8 h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[48%] right-[37%] cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
+              <a href="/eidolon" className='group absolute w-8 h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[48%] right-[37%] cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
                 <GameboyArrow className="absolute animate-pulse top-[15%] left-[18%] w-5 h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
 
                 {/* LABEL */}
@@ -372,7 +372,7 @@ function App() {
               </a>
 
               {/* 2. LEFT Arrow: SYZYGY (Fixed: Vertically Aligned with Right Arrow) */}
-              <a href="#syzygy" className='group absolute w-8 h-8 border-[#fffa88] rounded-full border-[1.5px] top-[62%] right-[54%] cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
+              <a href="/syzygy" className='group absolute w-8 h-8 border-[#fffa88] rounded-full border-[1.5px] top-[62%] right-[54%] cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
                 <div className="-rotate-90 w-full animate-pulse  h-full relative">
                   <GameboyArrow className="absolute top-[15%] left-[17%] w-5 h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
                 </div>
@@ -386,7 +386,7 @@ function App() {
               </a>
 
               {/* 3. RIGHT Arrow: PRIMA (Fixed: Vertically Aligned with Left Arrow) */}
-              <a href="#prima" className='group absolute w-8 h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[62%] right-[20%] cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
+              <a href="/prima" className='group absolute w-8 h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[62%] right-[20%] cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
                 <div className="rotate-90 w-full animate-pulse  h-full relative">
                   <GameboyArrow className="absolute top-[15%] left-[17%] w-5 h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
                 </div>
@@ -778,7 +778,7 @@ function App() {
               {/* LEFT SIDE: D-PAD with Links */}
               <div className="relative w-[35%] h-[70%]">
                 {/* UP Arrow: EIDOLON */}
-                <a href="#eidolon" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[15%] left-[46.5%] -translate-x-1/2 cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
+                <a href="/eidolon" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[15%] left-[46.5%] -translate-x-1/2 cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
                   <GameboyArrow className="absolute animate-pulse md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
                   <div className='absolute -top-5 animate-bounce left-1/2 -translate-x-1/2 flex flex-col items-center'>
                     <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#a0ff88] bg-black/60 px-1 rounded border border-[#a0ff88]/30 whitespace-nowrap drop-shadow-md'>
@@ -788,7 +788,7 @@ function App() {
                 </a>
 
                 {/* LEFT Arrow: SYZYGY */}
-                <a href="#syzygy" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88] rounded-full border-[1.5px] top-[65%] left-[10%] -translate-y-1/2 cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
+                <a href="/syzygy" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88] rounded-full border-[1.5px] top-[65%] left-[10%] -translate-y-1/2 cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
                   <div className="-rotate-90 animate-pulse w-full h-full relative">
                     <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
                   </div>
@@ -800,7 +800,7 @@ function App() {
                 </a>
 
                 {/* RIGHT Arrow: PRIMA */}
-                <a href="#prima" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[65%] right-[20%] -translate-y-1/2 cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
+                <a href="/prima" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[65%] right-[20%] -translate-y-1/2 cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
                   <div className="rotate-90 animate-pulse w-full h-full relative">
                     <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
                   </div>
