@@ -239,7 +239,7 @@ function App() {
                   {/* 5. DOWNLOAD BUTTON - Pushed to bottom with mt-auto */}
                   <a
                     href={MyResume}
-                    download="Min_Paing_Hein_Resume.pdf"
+                    download="Min_Paing_Hein_CV.pdf"
                     className='mt-auto w-full'
                   >
                     <button className='w-full rounded-sm border-[1.5px] border-[#e4bcff] text-[#e4bcff] font-pixelify uppercase tracking-widest text-lg hover:bg-[#e4bcff] hover:text-[#1a1a1a] hover:drop-shadow-[0_0_15px_rgba(228,188,255,0.6)] transition-all duration-300 group flex items-center justify-center gap-3'>
@@ -330,7 +330,7 @@ function App() {
                 {/* 2. DOWNLOAD BUTTON: Placed at absolute bottom */}
                 <a
                   href={MyResume}
-                  download="Min_Paing_Hein_Resume.pdf"
+                  download="Min_Paing_Hein_CV.pdf"
                   className='absolute bottom-2 left-1/2 -translate-x-1/2 w-[90%] md:w-[70%] animate-pulse z-50'
                 >
                   <button className='w-full rounded-sm border-[1.5px] border-[#e4bcff] text-[#e4bcff] font-pixelify uppercase tracking-widest text-[10px] md:text-sm py-1 hover:bg-[#e4bcff] hover:text-[#1a1a1a] hover:drop-shadow-[0_0_15px_rgba(228,188,255,0.6)] transition-all duration-300 group flex items-center justify-center gap-2'>
