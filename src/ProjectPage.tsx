@@ -1,580 +1,1080 @@
-import { useState, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
-import Dither from "./components/Dither";
-import SlideShowBox from './assets/Game Boy/Slide show gamboy.svg?react';
-// Assuming you have these components imported based on your snippet
-import GameboyArrow from "./assets/Game Boy/Gameboy arrow.svg?react"; // Adjust import path if needed
-import GameboyGrayButton from "./assets/Game Boy/Game boy gray button.svg?react"; // Adjust import path if needed
+import { useMemo, useState, useId } from 'react'
+import type { ComponentType, ReactNode, SVGProps } from 'react'
+import { Navigate, useParams } from 'react-router-dom'
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Bot,
+  CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Code2,
+  Cpu,
+  Download,
+  Github,
+  GraduationCap,
+  Layers3,
+  Presentation,
+  Sparkles,
+  UserRound,
+  X,
+  Terminal,
+  Database,
+  Zap,
+} from 'lucide-react'
+import Dither from './components/Dither'
+import { Backlight } from './components/Backlight'
+import MyResume from './assets/resume/Min Paing Hein CV.pdf'
 
-import SyzygyPage1 from "./assets/Screenshots/Syzygy/1.png";
-import SyzygyPage2 from "./assets/Screenshots/Syzygy/2.png";
-import SyzygyPage3 from "./assets/Screenshots/Syzygy/3.png";
-import SyzygyPage4 from "./assets/Screenshots/Syzygy/4.png";
-import SyzygyPage5 from "./assets/Screenshots/Syzygy/5.png";
+import dashboardShot from '../docs/images/syzygy/dashboard-shot.png'
+import newscanShot from '../docs/images/syzygy/newscan-shot.png'
+import analysisShot from '../docs/images/syzygy/analysis-shot.png'
+import explanationShot from '../docs/images/syzygy/explanation-shot.png'
+import profileShot from '../docs/images/syzygy/profile-shot.png'
 
-import EidolonPage1 from "./assets/Screenshots/Eidolon/1.png";
-import EidolonPage2 from "./assets/Screenshots/Eidolon/2.png";
-import EidolonPage3 from "./assets/Screenshots/Eidolon/3.png";
-import EidolonPage4 from "./assets/Screenshots/Eidolon/4.png";
-import EidolonPage5 from "./assets/Screenshots/Eidolon/5.png";
+import PrimaPage1 from './assets/Screenshots/Prima/1.png'
+import PrimaPage2 from './assets/Screenshots/Prima/2.png'
+import PrimaPage3 from './assets/Screenshots/Prima/3.png'
+import PrimaPage4 from './assets/Screenshots/Prima/4.png'
+import PrimaPage5 from './assets/Screenshots/Prima/5.png'
+import hero from '../docs/images/eidolon/hero.png'
+import noteList from '../docs/images/eidolon/note-list.png'
+import noteNew1 from '../docs/images/eidolon/note-new-1.png'
+import noteNew2 from '../docs/images/eidolon/note-new-2.png'
+import noteViewer from '../docs/images/eidolon/note-viewer.png'
+import noteFullscreen from '../docs/images/eidolon/note-fullscreen.png'
+import transcriptorUpload from '../docs/images/eidolon/transcriptor-upload.png'
+import transcriptorViewer from '../docs/images/eidolon/transcriptor-viewer.png'
+import audioConverter from '../docs/images/eidolon/audio-converter.png'
+import examPrepNew from '../docs/images/eidolon/exam-prep-new.png'
+import examPrepList from '../docs/images/eidolon/exam-prep-list.png'
+import examPrepViewer from '../docs/images/eidolon/exam-prep-viewer.png'
+import examPrepFullscreen from '../docs/images/eidolon/exam-prep-fullscreen.png'
+import groups from '../docs/images/eidolon/groups.png'
+import topup from '../docs/images/eidolon/topup.png'
+import admin from '../docs/images/eidolon/admin.png'
 
-import PrimaPage1 from "./assets/Screenshots/Prima/1.png";
-import PrimaPage2 from "./assets/Screenshots/Prima/2.png";
-import PrimaPage3 from "./assets/Screenshots/Prima/3.png";
-import PrimaPage4 from "./assets/Screenshots/Prima/4.png";
-import PrimaPage5 from "./assets/Screenshots/Prima/5.png";
-
-
-const HollowText = ({ children, className = "", size = "text-5xl" }: { children: string, className?: string, size?: string }) => {
-    return (
-        <div className={`relative ${size} ${className} font-semibold leading-none`}>
-            {/* Layer 1: The Solid Shadow (Back) */}
-            <span className="absolute left-[8px] top-[4px] text-[#2A2A35] select-none z-0">
-                {children}
-            </span>
-            {/* Layer 2: The Hollow Outline (Front) */}
-            <span
-                className="relative z-10 text-transparent"
-                style={{ WebkitTextStroke: '2.5px #C084FC' }} // Purple outline
-            >
-                {children}
-            </span>
-        </div>
-    )
+type ProjectRecord = {
+  title: string
+  accent: string
+  description: string
+  icon: ComponentType<SVGProps<SVGSVGElement>>
+  liveHref?: string
+  githubHref: string
+  stack: { label: string; tone: string }[]
+  details: { icon: ComponentType<SVGProps<SVGSVGElement>>; label: string; value: ReactNode }[]
+  slides: { title: string; description: string; image?: string; bullets: string[] }[]
+  bottomCards?: { icon: ComponentType<SVGProps<SVGSVGElement>>; title: string; description: string }[]
 }
 
-const ProjectPage = () => {
-    // 1. Get the parameter ID string
-    const { id } = useParams();
-    const [currentSlide, setCurrentSlide] = useState(0);
+const navItems = ['Home', 'Projects', 'Contact']
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-    const [isPhone, setIsPhone] = useState(window.innerWidth < 768);
+const projects: Record<string, ProjectRecord> = {
+  eidolon: {
+    title: 'Eidolon',
+    accent: 'Academic AI Suite',
+    description:
+      'AI-powered study platform for transcription, lecture-note generation, exam prep, group collaboration, credit billing, and admin operations.',
+    icon: GraduationCap,
+    liveHref: 'https://eidolon.pyrx.net',
+    githubHref: 'https://github.com/False10101/eidolon',
+    stack: [
+      { label: 'Next.js 15', tone: 'text-blue-300 bg-blue-500/10 border-blue-400/18' },
+      { label: 'React 19', tone: 'text-cyan-300 bg-cyan-500/10 border-cyan-400/18' },
+      { label: 'Tailwind CSS v4', tone: 'text-teal-300 bg-teal-500/10 border-teal-400/16' },
+      { label: 'PostgreSQL', tone: 'text-indigo-200 bg-indigo-500/10 border-indigo-400/16' },
+      { label: 'Redis + BullMQ', tone: 'text-rose-300 bg-rose-500/10 border-rose-400/16' },
+      { label: 'Auth0', tone: 'text-orange-200 bg-orange-500/10 border-orange-400/16' },
+      { label: 'Stripe', tone: 'text-violet-300 bg-violet-500/10 border-violet-400/16' },
+      { label: 'Cloudflare R2', tone: 'text-amber-200 bg-amber-500/10 border-amber-400/16' },
+      { label: 'FFmpeg', tone: 'text-green-300 bg-green-500/10 border-green-400/16' },
+      { label: 'Fireworks AI', tone: 'text-pink-200 bg-pink-500/10 border-pink-400/16' },
+      { label: 'DeepInfra Whisper', tone: 'text-fuchsia-200 bg-fuchsia-500/10 border-fuchsia-400/16' },
+    ],
+    details: [
+      { icon: GraduationCap, label: 'Project Type', value: 'Full-Stack Web App' },
+      { icon: UserRound, label: 'Role', value: 'Full-Stack Developer' },
+      { icon: CalendarDays, label: 'Version', value: 'Eidolon v2.0.1' },
+      {
+        icon: CheckCircle2,
+        label: 'Status',
+        value: (
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
+            Live / Ongoing
+          </span>
+        ),
+      },
+    ],
+    slides: [
+      {
+        title: 'Home Dashboard',
+        description:
+          'The main dashboard gives users a quick view of balance, recent activity, token usage, and the full workflow from media upload to final study materials.',
+        image: hero,
+        bullets: [
+          'Shows balance, note count, estimated remaining generations, and total token usage.',
+          'Displays recent activity with direct access to notes, transcripts, and exam prep outputs.',
+          'Introduces the core workflow: Audio Converter, Transcriptor, Notes, and Exam Prep.',
+          'Summarizes current-month usage across the platform’s main study tools.',
+        ],
+      },
+      {
+        title: 'Notes Library',
+        description:
+          'The notes workspace organizes both personal and group-generated notes, with style labels, token tiers, credit costs, and locked shared content.',
+        image: noteList,
+        bullets: [
+          'Separates individual notes from group notes in the same interface.',
+          'Surfaces note style, generation tier, credit charge, and creation date at a glance.',
+          'Supports locked group notes that can be unlocked instead of regenerated.',
+          'Designed around lecture-to-note workflows rather than generic file storage.',
+        ],
+      },
+      {
+        title: 'Create Note — Style Setup',
+        description:
+          'Users can choose how detailed their generated notes should be, with clear style definitions and cost expectations before generation starts.',
+        image: noteNew1,
+        bullets: [
+          'Includes Exam Note, Standard, and Textbook output modes.',
+          'Exam Note is compact, Standard is recap-focused, and Textbook is the most detailed.',
+          'Pricing scales with the depth and token intensity of the generated note.',
+          'Generation progress is tracked through reading, generating, and saving stages.',
+        ],
+      },
+      {
+        title: 'Create Note — Source & Metadata',
+        description:
+          'The note generator accepts uploaded source files or saved transcripts, then lets users define course naming and output language.',
+        image: noteNew2,
+        bullets: [
+          'Supports both direct file upload and transcript-based note generation.',
+          'Requires a course name before generation can begin.',
+          'Allows auto-detect or manual output language selection.',
+          'Can generate through either individual or group note flows.',
+        ],
+      },
+      {
+        title: 'Note Viewer',
+        description:
+          'Generated notes open in a full reader/editor with metadata, markdown rendering, inline editing, copy actions, and regeneration controls.',
+        image: noteViewer,
+        bullets: [
+          'Renders completed notes as structured Markdown content.',
+          'Shows note metadata such as style, charge amount, created date, and tier.',
+          'Supports editing the note title and content after generation.',
+          'Includes copy, regenerate, delete, and unlock-related actions.',
+        ],
+      },
+      {
+        title: 'Note Fullscreen Reader',
+        description:
+          'A fullscreen reading mode turns generated notes into a cleaner, distraction-free study surface for long-form review.',
+        image: noteFullscreen,
+        bullets: [
+          'Focuses entirely on note reading without surrounding management controls.',
+          'Works especially well for long textbook-style lecture notes.',
+          'Includes scroll-based reading progress behavior.',
+          'Acts as a dedicated study view alongside the editable note page.',
+        ],
+      },
+      {
+        title: 'Transcriptor Upload',
+        description:
+          'The transcription tool accepts large audio uploads, lets users pick between faster and higher-quality Whisper models, and estimates cost from media duration.',
+        image: transcriptorUpload,
+        bullets: [
+          'Accepts uploads up to 500 MB and rejects audio longer than 10 hours.',
+          'Supports mp3, wav, m4a, mp4, ogg, flac, aac, and webm inputs.',
+          'Offers Whisper Large v3 Turbo and Whisper Large v3 Premium modes.',
+          'Can return either plain text or timestamped transcript output.',
+        ],
+      },
+      {
+        title: 'Transcript Viewer',
+        description:
+          'Completed transcripts are stored with detailed metadata, readable output formatting, and export actions for reuse in later study workflows.',
+        image: transcriptorViewer,
+        bullets: [
+          'Displays transcript label, model used, duration, and output format.',
+          'Supports readable timestamp reconstruction when verbose JSON output is used.',
+          'Includes quick copy and text download actions.',
+          'Feeds directly into note generation and broader study pipelines.',
+        ],
+      },
+      {
+        title: 'Audio Converter',
+        description:
+          'The audio converter extracts sound from video, supports trimming and bitrate selection, and can optionally continue straight into transcription.',
+        image: audioConverter,
+        bullets: [
+          'Accepts mp4, mov, mkv, avi, and webm video files.',
+          'Exports MP3, WAV, or M4A with selectable bitrate presets.',
+          'Supports optional start/end trimming before conversion.',
+          'Can download only, transcribe only, or perform both in one queued flow.',
+        ],
+      },
+      {
+        title: 'Create Exam Prep',
+        description:
+          'Exam prep generation builds practice material from saved notes or uploaded text files, with configurable question types and difficulty levels.',
+        image: examPrepNew,
+        bullets: [
+          'Uses either stored notes or uploaded plain-text files as source material.',
+          'Supports True/False, MCQ, Theory, Scenario, and Calculation question types.',
+          'Lets users choose Easy, Normal, or Hard difficulty before generation.',
+          'Tracks multi-step generation including reading, writing solutions, and saving.',
+        ],
+      },
+      {
+        title: 'Exam Prep Library',
+        description:
+          'The exam prep index organizes individual and shared practice sets with difficulty labels, question-type badges, unlock pricing, and generation metadata.',
+        image: examPrepList,
+        bullets: [
+          'Separates group exam prep from personal exam prep outputs.',
+          'Shows question-type chips instead of vague generic categories.',
+          'Surfaces difficulty, token tier, credit cost, and timestamps in the list.',
+          'Supports unlockable group exam prep for eligible members.',
+        ],
+      },
+      {
+        title: 'Exam Prep Viewer',
+        description:
+          'The exam prep viewer combines metadata, question review, answer reveals, explanations, and misconception guidance in a dedicated study interface.',
+        image: examPrepViewer,
+        bullets: [
+          'Supports MCQ, T/F, theory, scenario, and calculation layouts.',
+          'MCQs can reveal correct answers and option-level explanations.',
+          'Non-MCQ questions can show solutions, answer steps, and misconceptions.',
+          'Questions can include lecture-source tags, topics, and cross-lecture markers.',
+        ],
+      },
+      {
+        title: 'Exam Prep Fullscreen Reader',
+        description:
+          'A fullscreen revision mode presents generated practice packs in a cleaner long-form format for uninterrupted study sessions.',
+        image: examPrepFullscreen,
+        bullets: [
+          'Optimized for reading through a full question set in sequence.',
+          'Helps turn generated practice content into a revision sheet.',
+          'Useful for longer theory and scenario-heavy outputs.',
+          'Complements the standard interactive solution-toggle view.',
+        ],
+      },
+      {
+        title: 'Group Workspaces',
+        description:
+          'Group workspaces allow students to collaborate through invite codes, shared tiers, member management, and member-based cost splitting.',
+        image: groups,
+        bullets: [
+          'Includes Small, Study, Class, and Faculty tiers with capacities of 5, 10, 25, and 50 members.',
+          'Creates a unique 7-character invite code for each group.',
+          'Splits generation costs across members, with generator discounts built into the model.',
+          'Supports rename, join, leave, kick, and owner/member role management flows.',
+        ],
+      },
+      {
+        title: 'Top-Up & Billing',
+        description:
+          'The billing system converts payments into credits, supports package bonuses and custom amounts, and uses Stripe to keep account balances funded.',
+        image: topup,
+        bullets: [
+          'Preset packages include 120, 500, 1,100, and 3,000 credit options.',
+          'Custom top-ups are converted at 100 credits per $1 when no preset package is used.',
+          'Stripe checkout and webhook confirmation handle crediting after payment.',
+          'Shows projected balance, local-currency estimates, and payment-method support.',
+        ],
+      },
+      {
+        title: 'Admin Dashboard',
+        description:
+          'The admin panel provides platform-level visibility into usage, profits, payouts, user behavior, and service performance across the app.',
+        image: admin,
+        bullets: [
+          'Tracks total users, new monthly users, active weekly users, bank inflow, and platform profit.',
+          'Breaks down revenue and API cost across notes, transcripts, and exam prep.',
+          'Shows user balances, detailed activity logs, and referral-related performance.',
+          'Includes service usage summaries for notes, transcripts, exam prep, and audio conversion.',
+        ],
+      },
+    ],
+    bottomCards: [
+      {
+        icon: Layers3,
+        title: 'What I Built',
+        description:
+          'A full academic AI workflow covering media ingestion, transcription, note generation, exam prep, billing, collaboration, and admin tooling.',
+      },
+      {
+        icon: Sparkles,
+        title: 'Key Features',
+        description:
+          'Whisper transcription, AI-generated notes, configurable practice questions, group cost sharing, Stripe top-ups, and detailed activity tracking.',
+      },
+      {
+        icon: Code2,
+        title: 'Tech Stack Overview',
+        description:
+          'Built with Next.js, React, PostgreSQL, Redis/BullMQ, Cloudflare R2, Auth0, Stripe, FFmpeg, and multiple AI model providers.',
+      },
+    ],
+  },
+syzygy: {
+  title: 'Syzygy',
+  accent: 'API Drift Detection',
+  description:
+    'Static analysis platform for detecting API drift between frontend API calls and backend route definitions across GitHub repositories before issues reach runtime.',
+    icon: Terminal,
+  liveHref: 'https://syzygy.minpainghein.com',
+  githubHref: 'https://github.com/False10101/syzygy',
+  stack: [
+    { label: 'React', tone: 'text-cyan-300 bg-cyan-500/10 border-cyan-400/18' },
+    { label: 'TypeScript', tone: 'text-blue-300 bg-blue-500/10 border-blue-400/16' },
+    { label: 'Vite', tone: 'text-violet-300 bg-violet-500/10 border-violet-400/16' },
+    { label: 'Tailwind CSS', tone: 'text-fuchsia-300 bg-fuchsia-500/10 border-fuchsia-400/16' },
+    { label: 'Node.js', tone: 'text-green-300 bg-green-500/10 border-green-400/16' },
+    { label: 'Express.js', tone: 'text-sky-300 bg-blue-500/10 border-blue-400/16' },
+    { label: 'MySQL', tone: 'text-amber-300 bg-amber-500/10 border-amber-400/16' },
+    { label: 'GitHub API', tone: 'text-slate-200 bg-slate-500/10 border-slate-300/12' },
+    { label: 'AES-256 Encryption', tone: 'text-emerald-300 bg-emerald-500/10 border-emerald-400/16' },
+  ],
+  details: [
+      { icon: Cpu, label: 'Project Type', value: 'Developer Tool' },
+    { icon: UserRound, label: 'Role', value: 'Full-Stack Developer' },
+    { icon: CalendarDays, label: 'Timeline', value: 'Dec 2025 – Jan 2026' },
+    {
+      icon: CheckCircle2,
+      label: 'Status',
+      value: (
+        <span className="inline-flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
+          Completed
+        </span>
+      ),
+    },
+  ],
+  slides: [
+    {
+      title: 'Command Center',
+      description:
+        'Monitor scan activity, average health score, active drift alerts, and recent repository analysis from a single operational dashboard.',
+      image: dashboardShot,
+      bullets: [
+        'High-level system overview on first load.',
+        'Recent analysis activity with health metrics.',
+        'Fast visibility into active API drift issues.',
+        'Designed like a live monitoring console.',
+      ],
+    },
+    {
+      title: 'Scan Configuration',
+      description:
+        'Set up a scan by selecting environments, repositories, and branches from connected GitHub credentials before running alignment analysis.',
+      image: newscanShot,
+      bullets: [
+        'GitHub token-backed repository discovery.',
+        'Separate backend and frontend source selection.',
+        'Branch targeting for different environments.',
+        'Supports flexible full-stack scan setup.',
+      ],
+    },
+    {
+      title: 'Drift Analysis',
+      description:
+        'Compare backend route definitions against frontend API consumption and evaluate overall alignment with a computed project health score.',
+      image: analysisShot,
+      bullets: [
+        'Highlights matched, mismatched, and orphaned routes.',
+        'Surfaces method mismatches and path drift clearly.',
+        'Shows backend definitions beside frontend usage.',
+        'Useful for fast API consistency checks.',
+      ],
+    },
+    {
+      title: 'Drift Explanation',
+      description:
+        'Inspect route mismatches in detail with side-by-side code context, issue diagnostics, and a suggested patch direction for resolution.',
+      image: explanationShot,
+      bullets: [
+        'Code-level comparison for drift debugging.',
+        'Explains likely root cause and impact.',
+        'Provides a copyable remediation suggestion.',
+        'Built to speed up alignment fixes.',
+      ],
+    },
+    {
+      title: 'Profile & Secure Keychain',
+      description:
+        'Manage account details, rotate passwords, and securely store encrypted GitHub personal access tokens used for scanning.',
+      image: profileShot,
+      bullets: [
+        'Profile editing and password update controls.',
+        'Encrypted GitHub token management interface.',
+        'Token verification before secure persistence.',
+        'Centralized control area for user access management.',
+      ],
+    },
+  ],
+  bottomCards: [
+    {
+      icon: Layers3,
+      title: 'What I Built',
+      description:
+        'A full-stack developer tool that statically analyzes repositories to detect API drift between frontend requests and backend definitions.',
+    },
+    {
+      icon: Sparkles,
+      title: 'Key Features',
+      description:
+        'Repository scanning, route extraction, fuzzy matching, drift diagnostics, and encrypted token storage for secure GitHub integration.',
+    },
+    {
+      icon: Code2,
+      title: 'Tech Stack Overview',
+      description:
+        'A modern React frontend with a Node and Express backend, MySQL persistence, GitHub API integration, and custom alignment logic.',
+    },
+  ],
+},
+  prima: {
+    title: 'Data Refinery',
+    accent: 'Prima',
+    description:
+      'Visual data cleaning and pipeline generation tool for data scientists. From raw CSV to production-ready Python code in minutes.',
+    icon: Database,
+    liveHref: 'https://prima.minpainghein.com',
+    githubHref: 'https://github.com/False10101/prima',
+    stack: [
+      { label: 'React', tone: 'text-cyan-300 bg-cyan-500/10 border-cyan-400/18' },
+      { label: 'TypeScript', tone: 'text-blue-300 bg-blue-500/10 border-blue-400/18' },
+      { label: 'FastAPI', tone: 'text-emerald-300 bg-emerald-500/10 border-emerald-400/18' },
+      { label: 'Tailwind CSS', tone: 'text-pink-300 bg-pink-500/10 border-pink-400/16' },
+      { label: 'Pandas & NumPy', tone: 'text-orange-300 bg-orange-500/10 border-orange-400/18' },
+      { label: 'scikit-learn', tone: 'text-purple-300 bg-purple-500/10 border-purple-400/16' },
+    ],
+    details: [
+      { icon: Code2, label: 'Project Type', value: 'Full-Stack Data Science Tool' },
+      { icon: UserRound, label: 'Role', value: 'Full-Stack Developer' },
+      { icon: CalendarDays, label: 'Timeline', value: 'Dec 2025 – Jan 2026' },
+      {
+        icon: CheckCircle2,
+        label: 'Status',
+        value: (
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
+            Completed
+          </span>
+        ),
+      },
+    ],
+    slides: [
+      {
+        title: 'Data Upload & Audit',
+        description:
+          'Upload CSV files and instantly audit data quality with comprehensive statistics and profiling.',
+        image: PrimaPage1,
+        bullets: [
+          'Drag-and-drop CSV file upload',
+          'Automatic data profiling and quality checks',
+          'Row and column statistics at a glance',
+          'Desktop-optimized for complex visualizations',
+        ],
+      },
+      {
+        title: 'Visual Recipe Builder',
+        description:
+          'Create data transformation recipes visually without writing code, then export as Python.',
+        image: PrimaPage2,
+        bullets: [
+          'Drag-and-drop transformation steps',
+          'Support for cleaning, encoding, and scaling operations',
+          'Real-time preview of transformations',
+          'Build complex pipelines intuitively',
+        ],
+      },
+      {
+        title: 'Code Generation',
+        description:
+          'Generate production-ready Python code from your visual recipes with sklearn pipelines.',
+        image: PrimaPage3,
+        bullets: [
+          'Instant Python code generation',
+          'Scikit-learn ColumnTransformer integration',
+          'Copy-paste ready for your projects',
+          'Includes pip requirements and setup instructions',
+        ],
+      },
+      {
+        title: 'Data Transformation Pipeline',
+        description:
+          'Apply multiple transformation operations including imputation, scaling, and encoding.',
+        image: PrimaPage4,
+        bullets: [
+          'Missing value imputation strategies',
+          'Feature scaling and normalization',
+          'Categorical encoding methods',
+          'Chained transformation workflows',
+        ],
+      },
+      {
+        title: 'Session Management',
+        description:
+          'Automatic cleanup and session management to keep the platform performant and secure.',
+        image: PrimaPage5,
+        bullets: [
+          'Background session cleanup jobs',
+          'Automatic temporary file removal',
+          'File size limits for data safety',
+          'Optimized for batch processing',
+        ],
+      },
+    ],
+    bottomCards: [
+      {
+        icon: Database,
+        title: 'What I Built',
+        description:
+          'A desktop data science tool that bridges the gap between data exploration and ML pipeline development.',
+      },
+      {
+        icon: Zap,
+        title: 'Key Features',
+        description:
+          'CSV upload, data auditing, visual recipe builder, code generation, and sklearn pipeline exports.',
+      },
+      {
+        icon: Code2,
+        title: 'Tech Stack Overview',
+        description:
+          'Modern React frontend with FastAPI backend, leveraging pandas and scikit-learn for data processing.',
+      },
+    ],
+  },
+  'rehearse-ai': {
+    title: 'Rehearse AI',
+    accent: 'Presentation Coach',
+    description:
+      'AI presentation coach that gives real-time feedback on posture, gestures, and speech using computer vision and LLMs. Built as capstone project.',
+    icon: Presentation,
+    githubHref: 'https://github.com/False10101/rehearse-ai',
+    stack: [
+      { label: 'Next.js', tone: 'text-blue-300 bg-blue-500/10 border-blue-400/18' },
+      { label: 'FastAPI', tone: 'text-green-300 bg-green-500/10 border-green-400/16' },
+      { label: 'MediaPipe', tone: 'text-teal-300 bg-teal-500/10 border-teal-400/16' },
+      { label: 'YOLO', tone: 'text-yellow-300 bg-yellow-500/10 border-yellow-400/16' },
+      { label: 'Groq Whisper', tone: 'text-pink-200 bg-pink-500/10 border-pink-400/16' },
+      { label: 'Azure TTS', tone: 'text-sky-300 bg-sky-500/10 border-sky-400/18' },
+    ],
+    details: [
+      { icon: Presentation, label: 'Project Type', value: 'AI Coach Application' },
+      { icon: UserRound, label: 'Role', value: 'Full-Stack Developer' },
+      { icon: CalendarDays, label: 'Timeline', value: 'Capstone Project' },
+      {
+        icon: CheckCircle2,
+        label: 'Status',
+        value: (
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+            In Progress
+          </span>
+        ),
+      },
+    ],
+    slides: [
+      {
+        title: 'Development in Progress',
+        description: 'Detailed previews and workflow walkthroughs are currently being prepared as the project nears completion.',
+        bullets: [
+          'UI polishing and component integration in progress.',
+          'Connecting Groq Whisper and Azure TTS pipelines.',
+          'Refining computer vision models for posture and gesture analysis.'
+        ],
+      }
+    ],
+    bottomCards: [
+      { icon: Layers3, title: 'What I am Building', description: 'A comprehensive AI presentation coach offering real-time feedback using vision and language models.' },
+      { icon: Sparkles, title: 'Key Features', description: 'Real-time gesture tracking, speech-to-text analysis, dynamic feedback generation, and progress tracking.' },
+      { icon: Code2, title: 'Tech Stack Overview', description: 'Next.js frontend with FastAPI backend, powered by MediaPipe, YOLO, Groq Whisper, and Azure TTS.' }
+    ]
+  },
+  cantarella: {
+    title: 'Cantarella',
+    accent: 'AI Assistant',
+    description:
+      'Personal AI assistant with long-term memory via RAG. Knows your context, remembers across conversations, runs fully self-hosted.',
+    icon: Bot,
+    githubHref: 'https://github.com/False10101/Cantarella-Revamped',
+    stack: [
+      { label: 'Next.js', tone: 'text-blue-300 bg-blue-500/10 border-blue-400/18' },
+      { label: 'Express', tone: 'text-slate-300 bg-slate-500/10 border-slate-300/12' },
+      { label: 'DeepSeek', tone: 'text-indigo-300 bg-indigo-500/10 border-indigo-400/16' },
+      { label: 'pgvector', tone: 'text-sky-300 bg-sky-500/10 border-sky-400/18' },
+      { label: 'BullMQ', tone: 'text-red-300 bg-red-500/10 border-red-400/16' },
+      { label: 'Upstash', tone: 'text-green-300 bg-green-500/10 border-green-400/16' },
+    ],
+    details: [
+      { icon: Bot, label: 'Project Type', value: 'Personal AI Agent' },
+      { icon: UserRound, label: 'Role', value: 'Full-Stack Developer' },
+      { icon: CalendarDays, label: 'Timeline', value: 'Ongoing' },
+      {
+        icon: CheckCircle2,
+        label: 'Status',
+        value: (
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+            In Progress
+          </span>
+        ),
+      },
+    ],
+    slides: [
+      {
+        title: 'Development in Progress',
+        description: 'Detailed previews and workflow walkthroughs are currently being prepared.',
+        bullets: [
+          'RAG pipeline optimization using pgvector.',
+          'Long-term memory implementation and context injection.',
+          'Self-hosted infrastructure and queue management setup.'
+        ],
+      }
+    ],
+    bottomCards: [
+      { icon: Layers3, title: 'What I am Building', description: 'A deeply personal, context-aware AI assistant capable of maintaining long-term memory across sessions.' },
+      { icon: Sparkles, title: 'Key Features', description: 'Self-hosted infrastructure, vector-based RAG memory, persistent conversational context, and custom tool usage.' },
+      { icon: Code2, title: 'Tech Stack Overview', description: 'Next.js, Express, DeepSeek, pgvector for embeddings, and BullMQ with Upstash for background processing.' }
+    ]
+  }
+}
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalImage, setModalImage] = useState("");
+export default function ProjectPage() {
+  const { id } = useParams()
+  const project = id ? projects[id.toLowerCase()] : null
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            setIsMobile(width < 1024);
-            setIsPhone(width < 768); // Detect phone specifically
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+  const activeSlide = useMemo(() => {
+    if (!project) return null
+    return project.slides[currentSlide] ?? project.slides[0]
+  }, [currentSlide, project])
 
-    const cutSize = isPhone ? "20px" : "35px";
+  if (!project || !activeSlide) {
+    return <Navigate to="/projects" replace />
+  }
 
-    const openModal = (url: string) => {
-        setModalImage(url);
-        setIsModalOpen(true);
-    };
+  const showNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % project.slides.length)
+  }
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setModalImage("");
-    };
+  const showPrev = () => {
+    setCurrentSlide((prev) => (prev - 1 + project.slides.length) % project.slides.length)
+  }
 
-    // --- DYNAMIC IMAGE SELECTION LOGIC ---
-    const syzygyImages = [SyzygyPage1, SyzygyPage2, SyzygyPage3, SyzygyPage4, SyzygyPage5];
-    const eidolonImages = [EidolonPage1, EidolonPage2, EidolonPage3, EidolonPage4, EidolonPage5];
-    const primaImages = [PrimaPage1, PrimaPage2, PrimaPage3, PrimaPage4, PrimaPage5];
-
-    const imageMap: Record<string, string[]> = {
-        syzygy: syzygyImages,
-        eidolon: eidolonImages,
-        prima: primaImages
-    };
-
-    // Get the correct array based on ID, default to Syzygy if somehow undefined (though redirect handles this)
-    const selectedImages = id ? imageMap[id.toLowerCase()] : syzygyImages;
-
-    // Map the selected images to your slide format
-    const slides = selectedImages?.map((url, index) => ({
-        id: index + 1,
-        url: url
-    })) || [];
-
-    const nextSlide = (e?: React.MouseEvent) => {
-        e?.preventDefault();
-        setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    };
-
-    const prevSlide = (e?: React.MouseEvent) => {
-        e?.preventDefault();
-        setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-    };
-
-    // 2. Define your data 
-    const syzygyDataset = {
-        firstLetter: "S",
-        restOfTitle: "yzygy",
-        description: "API Drift Detection Tool",
-        accountDetail: "Sign up to create your account",
-        url: "https://syzygy.minpainghein.com",
-        pages: {
-            1: "Command Center: High-level overview of system integrity, active anomalies, and recent scan logs.",
-            2: "Operative Profile: Manage your administrator credentials, security protocols, and API keys.",
-            3: "New Scan: Initialize scans across backend cores and frontend interfaces to detect mismatches.",
-            4: "Alignment View: Visualize backend definitions vs. frontend consumption side-by-side.",
-            5: "Drift Inspector: Deep dive into code-level discrepancies between endpoint definitions and calls."
+  return (
+    <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#020713] font-sans text-white antialiased">
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 5px;
         }
-    };
-
-    const eidolonDataset = {
-        firstLetter: "E",
-        restOfTitle: "idolon",
-        description: "All in one AI Suite App",
-        accountDetail: "Username: guest | Password: guest",
-        url: "https://eidolon.minpainghein.com",
-        pages: {
-            1: "Main Dashboard: Real-time overview of API tokens, costs, and system status.",
-            2: "Smart Note Taker: Transforms raw transcripts into formatted notes with smart tagging.",
-            3: "Document Generator: Create structured reports and essays from simple prompts.",
-            4: "Textbook Explainer: Simplifies complex PDFs into digestible study guides.",
-            5: "User Diagnostics: Track your API consumption, storage, and activity logs."
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(10, 16, 34, 0.4);
+          border-radius: 8px;
         }
-    };
-
-    const primaDataset = {
-        firstLetter: "P",
-        restOfTitle: "rima",
-        description: "Data cleaning and pipeline tool",
-        accountDetail: "No need to sign up",
-        url: "https://prima.minpainghein.com",
-        pages: {
-            1: "The Extraction Point: Upload raw CSVs to initialize a lightweight session immediately.",
-            2: "Session Active: Confirm successful data sampling and enter the audit room.",
-            3: "The Raw Matter: Analyze dataset health, including duplicates, missing cells, and distribution stats.",
-            4: "Pipeline Stack: Build transformation recipes (e.g., Fill Median) with a live preview of results.",
-            5: "The Elixir: Generate and deploy the final Python preprocessing pipeline code."
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), rgba(217, 70, 239, 0.5));
+          border-radius: 8px;
         }
-    };
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, rgba(96, 165, 250, 0.9), rgba(167, 139, 250, 0.9), rgba(232, 121, 249, 0.9));
+        }
+      `}</style>
 
-    // 3. Create a Lookup Object
-    const datasets: Record<string, any> = {
-        syzygy: syzygyDataset,
-        eidolon: eidolonDataset,
-        prima: primaDataset
-    };
+      <div className="absolute inset-0 opacity-35">
+        <Dither
+          waveColor={[0.03, 0.09, 0.36]}
+          disableAnimation={false}
+          enableMouseInteraction={false}
+          colorNum={5}
+          pixelSize={2}
+          waveAmplitude={0.2}
+          waveFrequency={2.2}
+          waveSpeed={0.025}
+        />
+      </div>
 
-    // 4. Select the dataset based on the URL ID
-    const currentDataset = id ? datasets[id.toLowerCase()] : null;
+      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-90">
+        <div className="absolute -left-[20%] top-[-10%] h-[70%] w-[70%] -rotate-12 rounded-[100%] bg-blue-950/80 blur-[130px]" />
+        <div className="absolute -right-[10%] top-[10%] h-[80%] w-[60%] rotate-12 rounded-[100%] bg-indigo-950/80 blur-[140px]" />
+        <div className="absolute -bottom-[20%] -left-[10%] h-[70%] w-[80%] rotate-[-25deg] rounded-[100%] bg-violet-950/70 blur-[130px]" />
+        <div className="absolute left-[15%] top-[30%] h-[40%] w-[50%] rotate-[15deg] rounded-[100%] bg-blue-900/40 blur-[100px]" />
+        <div className="absolute right-[15%] bottom-[20%] h-[50%] w-[40%] rotate-[-30deg] rounded-[100%] bg-fuchsia-950/30 blur-[120px]" />
+        <div className="absolute left-[40%] top-[60%] h-[30%] w-[40%] rotate-[45deg] rounded-[100%] bg-cyan-950/20 blur-[100px]" />
+      </div>
 
-    // Optional: Redirect if the URL is wrong
-    if (!currentDataset) {
-        return <Navigate to="/" replace />;
-    }
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(2,6,18,0.1),rgba(0,0,0,0.98)),radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.5)_80%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:28px_28px] opacity-[0.16]" />
+      <div className="pointer-events-none absolute bottom-[95px] left-0 h-[285px] w-[170px] bg-[radial-gradient(circle,rgba(28,113,255,0.55)_1px,transparent_1.5px)] bg-[size:9px_9px] opacity-60 [mask-image:linear-gradient(90deg,#000,transparent)]" />
+      <div className="pointer-events-none absolute right-0 top-[95px] h-[285px] w-[170px] bg-[radial-gradient(circle,rgba(28,113,255,0.55)_1px,transparent_1.5px)] bg-[size:9px_9px] opacity-60 [mask-image:linear-gradient(270deg,#000,transparent)]" />
 
+      <div className="relative z-10 grid h-[92vh] w-[calc(100vw-96px)] max-w-[1500px] grid-rows-[56px_minmax(0,1fr)_auto] gap-6">
+        <div className="flex min-h-0 items-start">
+          <header className="nav-border relative h-full w-full overflow-hidden rounded-xl border border-blue-300/35 bg-[#0b1021]/78 backdrop-blur-xl">
+            <div className="flex h-full items-center justify-between gap-4 px-5">
+            <a href="/" className="flex items-center gap-5">
+              <MpLogo />
+              <span className="text-[0.95rem] font-semibold text-white">Min Paing Hein</span>
+            </a>
 
-    return (
-        <main className="relative w-full h-screen overflow-hidden bg-gray-900">
-            {/* Background layers... */}
-            <div className='absolute inset-0 z-0'>
-                <Dither waveColor={[0.5, 0.0, 0.7]} disableAnimation={false} enableMouseInteraction={false} colorNum={4} waveAmplitude={0.3} waveFrequency={3} waveSpeed={0.05} />
-            </div>
+            <nav className="hidden h-full items-center gap-12 lg:flex">
+              {navItems.map((item) => {
+                const href = item === 'Home' ? '/' : `/${item.toLowerCase()}`
+                const isActive = item === 'Projects'
 
-            <div className='absolute xl:left-[5%] top-0 h-screen w-full xl:w-[90%] bg-black/70 xl:bg-black/70 z-10 backdrop-blur-sm pointer-events-none xl:[clip-path:polygon(10%_0,100%_0,92%_100%,5%_100%)]'></div>
+                return (
+                  <a
+                    key={item}
+                    href={href}
+                    className={`relative flex h-full items-center text-[0.88rem] transition-all duration-200 active:scale-95 ${
+                      isActive ? 'text-blue-300 drop-shadow-[0_0_7px_rgba(96,165,250,0.74)]' : 'text-white/90 hover:text-blue-300'
+                    }`}
+                  >
+                    {item}
+                    {isActive ? (
+                      <>
+                        <span className="absolute inset-x-[-10px] bottom-[-1px] h-px bg-gradient-to-r from-transparent via-white to-blue-200/90 shadow-[0_0_6px_rgba(219,234,254,0.95)]" />
+                        <span className="absolute bottom-[-4px] left-1/2 h-[6px] w-[48px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.82),rgba(96,165,250,0.40)_34%,transparent_68%)] blur-[2px]" />
+                      </>
+                    ) : null}
+                  </a>
+                )
+              })}
+            </nav>
 
-            <div className='relative z-20 h-full flex flex-col items-center w-[95%] xl:w-[85%] mx-auto text-white overflow-hidden xl:[clip-path:polygon(10%_0,100%_0,92%_100%,5%_100%)]' >
-                <div className='offsetBox w-full xl:w-[90%] ml-auto h-full flex flex-col'>
-                    <div className='topSplit w-full h-[12%] md:h-[16%] xl:h-[22.5%] grid'>
+            <a
+              href={MyResume}
+              download="Min_Paing_Hein_CV.pdf"
+              className="group hidden h-[38px] rounded-[10px] bg-gradient-to-br from-blue-400 via-indigo-500 to-violet-600 p-[1px] shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.8)] active:scale-95 lg:inline-flex"
+            >
+              <div className="relative flex h-full w-full items-center gap-2 overflow-hidden rounded-[9px] bg-[#090e1f] px-4 text-[0.88rem] font-medium text-blue-100 transition-all duration-300 group-hover:bg-[#090e1f]/40 group-hover:text-white group-hover:shadow-[inset_0_0_15px_rgba(59,130,246,0.4)]">
+                <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+                <Download className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-blue-300" />
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">Download CV</span>
+              </div>
+            </a>
+          </div>
+          </header>
+        </div>
 
-                        {
-                            id?.toLowerCase() === "prima" &&
+        <div className="grid min-h-0 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          
+          <div className="relative flex h-full min-w-0 flex-col pl-8">
+            <span className="absolute bottom-10 left-0 top-2 w-px bg-gradient-to-b from-blue-500/70 via-blue-500/25 via-[82%] to-transparent" />
+            <span className="absolute left-[-1.5px] top-2 h-[50px] w-[4px] rounded-full border border-blue-400 bg-gradient-to-b from-blue-600 via-white to-blue-600 shadow-[0_0_14px_rgba(59,130,246,1)]" />
 
-                            <div className='grid topLeftText border-[#a31eff]/50 border-b-2 w-full '>
-                                <div className="relative grid grid-cols-[15%_78%] grid-rows-2 ml-3 w-full xl:w-[90%] justify-center xl:justify-normal xl:justify-self-center mt-auto mb-2 md:mb-5 text-2xl md:text-5xl font-['BrickSans'] gap-y-1 md:gap-y-3 tracking-wide">
-                                    <div className='grid row-span-2 col-span-1 my-auto justify-end'><HollowText size="text-7xl md:text-9xl">{currentDataset.firstLetter}</HollowText></div>
-                                    <div className='grid row-span-1 col-span-1 ml-2 mt-2 items-end'>{currentDataset.restOfTitle}</div>
-                                    <div className='grid row-span-1 col-span-1 mt-0 md:-ml-2 items-center'><HollowText size="text-sm md:text-[1.6875rem] xl:text-4xl ">{currentDataset.description}</HollowText></div>
-                                    <div className='absolute bg-[#332936] w-[75%] md:w-[75%] xl:w-[73%] h-[35%] bottom-0 md:-bottom-2 left-[20%] xl:right-0 z-[-1]'></div>
-                                </div>
-                            </div>
-                        }
-
-                        {
-                            id?.toLowerCase() === "eidolon" &&
-
-                            <div className='grid topLeftText border-[#a31eff]/50 border-b-2 w-full '>
-                                <div className="relative grid grid-cols-[15%_78%] grid-rows-2 ml-3 w-full xl:w-[60%] justify-center xl:justify-normal xl:justify-self-center mt-auto mb-2 md:mb-5 text-2xl md:text-5xl font-['BrickSans'] gap-y-1 md:gap-y-3 tracking-wide">
-                                    <div className='grid row-span-2 col-span-1 my-auto justify-end mr-[15%]'><HollowText size="text-7xl md:text-9xl">{currentDataset.firstLetter}</HollowText></div>
-                                    <div className='grid row-span-1 col-span-1 mt-2 items-end'>{currentDataset.restOfTitle}</div>
-                                    <div className='grid row-span-1 col-span-1 mt-0 items-center'><HollowText size="text-lg md:text-2xl md:text-4xl ">{currentDataset.description}</HollowText></div>
-                                    <div className='absolute bg-[#332936] w-[65%] md:w-[68%] xl:w-[75%] h-[35%] bottom-0 md:-bottom-2 left-[20%] xl:right-0 z-[-1]'></div>
-                                </div>
-                            </div>
-                        }
-
-                        {
-                            id?.toLowerCase() === "syzygy" &&
-
-                            <div className='grid topLeftText border-[#a31eff]/50 border-b-2 w-full '>
-                                <div className="relative grid grid-cols-[15%_78%] grid-rows-2 ml-3 w-full xl:w-[70%] justify-center xl:justify-normal xl:justify-self-center mt-auto pb-2 mb-2 md:mb-5 text-2xl md:text-5xl font-['BrickSans'] gap-y-1 md:gap-y-3 tracking-wide">
-                                    <div className='grid row-span-2 col-span-1 my-auto justify-end mr-[15%]'><HollowText size="text-7xl md:text-9xl">{currentDataset.firstLetter}</HollowText></div>
-                                    <div className='grid row-span-1 col-span-1  items-end'>{currentDataset.restOfTitle}</div>
-                                    <div className='grid row-span-1 col-span-1 mt-2 items-center'><HollowText size="text-lg md:text-2xl md:text-4xl ">{currentDataset.description}</HollowText></div>
-                                    <div className='absolute bg-[#332936] w-[75%] md:w-[78%] xl:w-[70%] h-[35%] bottom-0 md:-bottom-2 left-[18%] xl:right-0 z-[-1]'></div>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-
-                    {/* --- MIDDLE SPLIT WITH CAROUSEL --- */}
-                    {!isMobile && (
-                        <div className="middleSplit relative w-[95%] xl:w-[92%] w-full h-[50%] xl:h-[60%] mt-[2%] flex items-center justify-center">
-
-                            {/* 1. The Gameboy SVG Frame */}
-                            <SlideShowBox className="w-full h-[90%] absolute z-10 pointer-events-none" style={{
-                                clipPath: 'polygon(40px 0, calc(100% - 40px) 0, 100% 40px, 100% calc(100% - 40px), calc(100% - 40px) 100%, 40px 100%, 0 calc(100% - 40px), 0 40px)'
-                            }} />
-
-                            {/* 2. THE SCREEN (Carousel + Nav Arrows) */}
-                            {/* Positioned inside the SVG 'hole' */}
-                            <div className="absolute z-20 top-[12%] h-[65%] w-[74%] border-10 border-x-14 border-[#302433] bg-[#0f0f12] overflow-hidden flex items-center justify-center"
-
-                            >
-
-                                {/* Left Nav Arrow (Inside Screen) */}
-                                <button onClick={prevSlide} className="absolute left-4 z-50 text-white/70 hover:text-white hover:scale-110 transition-all">
-                                    <span className="font-pixelify text-4xl">{'<'}</span>
-                                </button>
-
-                                {/* Right Nav Arrow (Inside Screen) */}
-                                <button onClick={nextSlide} className="absolute right-4 z-50 text-white/70 hover:text-white hover:scale-110 transition-all">
-                                    <span className="font-pixelify text-4xl">{'>'}</span>
-                                </button>
-
-                                {/* The 3D Carousel Stack */}
-                                <div className="relative w-full h-full flex items-center justify-center perspective-[1000px]">
-                                    {slides.map((slide, index) => {
-                                        // Calculate distance from current slide (-2, -1, 0, 1, 2)
-                                        let offset = index - currentSlide;
-                                        if (offset > 2) offset -= slides.length;
-                                        if (offset < -2) offset += slides.length;
-
-                                        // Determine styles based on offset
-                                        // 0 = Center, 1/-1 = Immediate neighbors, 2/-2 = Outer edges
-                                        const isActive = offset === 0;
-                                        const absOffset = Math.abs(offset);
-
-                                        // Z-index: Center is highest (20), then 10, then 0
-                                        const zIndex = 20 - (absOffset * 10);
-
-                                        // X Translate: Spread them out. 
-                                        // 0 -> 0px
-                                        // 1 -> 55%
-                                        // 2 -> 85%
-                                        let translateX = '0%';
-                                        if (offset === 1) translateX = '27.5%';
-                                        if (offset === -1) translateX = '-27.5%';
-                                        if (offset === 2) translateX = '50%';
-                                        if (offset === -2) translateX = '-50%';
-
-                                        // Scale: Center 1, neighbors 0.85, outer 0.7
-                                        const scale = isActive ? 1 : (absOffset === 1 ? 0.85 : 0.7);
-
-                                        // Opacity for depth
-                                        const opacity = isActive ? 1 : (absOffset === 1 ? 0.6 : 0.3);
-
-                                        return (
-                                            <img
-                                                key={slide.id}
-                                                className={`absolute w-[60%] h-auto aspect-video bg-[#2A2A35] transition-all duration-500 ease-in-out border border-white/10 shadow-2xl flex items-center justify-center`}
-                                                style={{
-                                                    transform: `translateX(${translateX}) scale(${scale})`,
-                                                    zIndex: zIndex,
-                                                    opacity: opacity,
-                                                }}
-
-                                                src={slide.url}
-                                                onClick={() => isActive && openModal(slide.url)}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {/* 3. PHYSICAL CONTROLS (Purely Cosmetic as requested) */}
-                            {/* These sit ON TOP of the SVG frame but outside the screen */}
-                            <div className="absolute inset-0 z-30 pointer-events-none">
-
-                                {/* --- Left Control Cluster (D-PAD) --- */}
-                                <div className="absolute top-[35%] left-[2%] w-[12%] h-[40%] pointer-events-auto">
-                                    <div className="relative w-full h-full">
-                                        {/* D-Pad Cross */}
-                                        {/* LEFT SIDE: D-PAD with Links */}
-                                        <div className="relative w-[35%] h-[70%]">
-                                            {/* UP Arrow: EIDOLON */}
-                                            <a href="/eidolon" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88] rounded-full border-[1.5px] bottom-[25%] left-[122.5%] -translate-x-1/2 cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
-                                                <GameboyArrow className="absolute animate-pulse md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
-                                                <div className='absolute -top-5 animate-bounce left-1/2 -translate-x-1/2 flex flex-col items-center'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#a0ff88] bg-black/60 px-1 rounded border border-[#a0ff88]/30 whitespace-nowrap drop-shadow-md'>
-                                                        EIDOLON
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* LEFT Arrow: SYZYGY */}
-                                            <a href="/syzygy" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88] rounded-full border-[1.5px] -bottom-[10%] left-[10%] -translate-y-1/2 cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
-                                                <div className="-rotate-90 animate-pulse w-full h-full relative">
-                                                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
-                                                </div>
-                                                <div className='absolute animate-bounce top-[150%] left-[30%] -translate-x-1/2 flex items-center justify-center w-16'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#fffa88] bg-black/60 px-1 rounded border border-[#fffa88]/30 whitespace-nowrap drop-shadow-md'>
-                                                        SYZYGY
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* RIGHT Arrow: PRIMA */}
-                                            <a href="/prima" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff] rounded-full border-[1.5px] -bottom-[10%] left-[160%] -translate-y-1/2 cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
-                                                <div className="rotate-90 animate-pulse w-full h-full relative">
-                                                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
-                                                </div>
-                                                <div className='absolute animate-bounce top-[150%] left-[70%] -translate-x-1/2 flex items-center justify-center w-14'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#88a9ff] bg-black/60 px-1 rounded border border-[#88a9ff]/30 whitespace-nowrap drop-shadow-md'>
-                                                        PRIMA
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* DOWN Arrow: Decoration */}
-                                            <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#ff8888]/30 rounded-full border-[1.5px] -bottom-[25%] left-[125%] -translate-x-1/2 rotate-[180deg] opacity-50 pointer-events-none'>
-                                                <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#ff8888] [&_*]:stroke-[#ff8888]" />
-                                            </div>
-
-                                        </div>
-
-                                        {/* Analog Stick (Below D-pad) */}
-                                        <div className="absolute -bottom-[30%] -right-[20%] -translate-x-1/2">
-                                            <GameboyGrayButton className="w-12 h-12 opacity-80" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* --- Right Control Cluster (Buttons) --- */}
-                                <div className="absolute top-[35%] right-[2%] w-[12%] h-[40%] pointer-events-auto">
-                                    <div className="relative w-full h-full">
-                                        {/* ABXY Diamond */}
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24">
-                                            <div className="absolute -bottom-0 left-[60%] -translate-x-1/2 w-8 h-8 border border-[#ff8888]/50 rounded-full flex items-center justify-center text-[#ff8888] font-pixelify">X</div>
-                                            <div className="absolute -bottom-[70%] left-[60%] -translate-x-1/2 w-8 h-8 border border-[#a0ff88]/50 rounded-full flex items-center justify-center text-[#a0ff88] font-pixelify">B</div>
-                                            <div className="absolute -bottom-[50%] left-[10%] -translate-y-1/2 w-8 h-8 border border-[#88a9ff]/50 rounded-full flex items-center justify-center text-[#88a9ff] font-pixelify">Y</div>
-                                            <div className="absolute -bottom-[50%] -right-[10%] -translate-y-1/2 w-8 h-8 border border-[#fffa88]/50 rounded-full flex items-center justify-center text-[#fffa88] font-pixelify">A</div>
-                                        </div>
-
-                                        {/* Analog Stick (Below Buttons) */}
-                                        <div className="absolute -bottom-[31%] left-[13%] -translate-x-1/2">
-                                            <GameboyGrayButton className="w-12 h-12 opacity-80" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* --- Bottom Center Pagination --- */}
-                                <div className="absolute bottom-[13%] left-1/2 -translate-x-1/2 flex space-x-4 pointer-events-auto">
-                                    {slides.map((_, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-[#C084FC] scale-125' : 'bg-white scale-60'}`}
-                                        />
-                                    ))}
-                                </div>
-
-                            </div>
-                        </div>
-                    )}
-
-                    {/* B. MOBILE/TABLET VIEW (Vertical) */}
-                    {isMobile && (
-                        <div className="middleSplitMobile relative w-full h-[70%] mt-[5%] flex items-center justify-center">
-
-                            {/* ROTATED SVG Frame */}
-                            {/* Note: We rotate 90deg. Height/Width classes act on the pre-rotated box, so we size it carefully. */}
-                            <div className="relative w-full h-full flex items-center justify-center">
-                                <SlideShowBox className="absolute h-[50%] md:h-[70%] top-[25%] md:top-[15%] w-[69vh] rotate-90 z-10 pointer-events-none"
-                                    style={{
-                                        clipPath: `polygon(
-                                            ${cutSize} 0, 
-                                            calc(100% - ${cutSize}) 0, 
-                                            100% ${cutSize}, 
-                                            100% calc(100% - ${cutSize}), 
-                                            calc(100% - ${cutSize}) 100%, 
-                                            ${cutSize} 100%, 
-                                            0 calc(100% - ${cutSize}), 
-                                            0 ${cutSize}
-                                        )`
-                                    }} />
-
-                                {/* Vertical Screen & Carousel */}
-                                {/* Positioned relative to the viewport center since the SVG is rotated 90deg purely visually */}
-                                <div className="absolute z-20 w-[60%] h-[75%] bg-[#0f0f12] overflow-hidden flex flex-col items-center justify-center border-8 top-[5%] border-[#302433]">
-                                    <button onClick={prevSlide} className="absolute top-4 z-50 text-white/70 hover:text-white hover:scale-110 transition-all rotate-90"><span className="font-pixelify text-4xl">{'<'}</span></button>
-                                    <button onClick={nextSlide} className="absolute bottom-4 z-50 text-white/70 hover:text-white hover:scale-110 transition-all rotate-90"><span className="font-pixelify text-4xl">{'>'}</span></button>
-
-                                    <div className="relative w-full h-full flex flex-col items-center justify-center perspective-[1000px]">
-                                        {slides.map((slide, index) => {
-                                            let offset = index - currentSlide;
-                                            if (offset > 2) offset -= slides.length;
-                                            if (offset < -2) offset += slides.length;
-                                            const isActive = offset === 0;
-                                            const absOffset = Math.abs(offset);
-                                            const zIndex = 20 - (absOffset * 10);
-
-                                            // Vertical Translate (Y instead of X)
-                                            let translateY = '0%';
-                                            if (offset === 1) translateY = '37.5%';
-                                            if (offset === -1) translateY = '-37.5%';
-                                            if (offset === 2) translateY = '70%';
-                                            if (offset === -2) translateY = '-70%';
-
-                                            const scale = isActive ? 1 : (absOffset === 1 ? 0.85 : 0.7);
-                                            const opacity = isActive ? 1 : (absOffset === 1 ? 0.6 : 0.3);
-
-                                            return (
-                                                <img key={slide.id} className={`absolute w-[90%] h-auto aspect-video bg-[#2A2A35] transition-all duration-500 ease-in-out border border-white/10 shadow-2xl flex items-center justify-center`}
-                                                    style={{ transform: `translateY(${translateY}) scale(${scale})`, zIndex, opacity }}
-                                                    src={slide.url}
-                                                    onClick={() => isActive && openModal(slide.url)}
-                                                />
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Controls Overlay (Bottom Aligned Horizontal) */}
-                            <div className="absolute bottom-0 h-[20%] w-[65%]  z-30 pointer-events-none">
-
-                                {/* --- Left Control Cluster (D-PAD) --- */}
-                                <div className="absolute top-[35%] left-[2%] w-[12%] h-[40%] pointer-events-auto">
-                                    <div className="relative w-full h-full">
-                                        {/* D-Pad Cross */}
-                                        {/* LEFT SIDE: D-PAD with Links */}
-                                        <div className="relative w-[55%] h-[70%]">
-                                            {/* UP Arrow: EIDOLON */}
-                                            <a href="/eidolon" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88] rounded-full border-[1.5px] -top-[70%] left-[147.5%] -translate-x-1/2 cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
-                                                <GameboyArrow className="absolute animate-pulse md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
-                                                <div className='absolute -top-5 animate-bounce left-1/2 -translate-x-1/2 flex flex-col items-center'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#a0ff88] bg-black/60 px-1 rounded border border-[#a0ff88]/30 whitespace-nowrap drop-shadow-md'>
-                                                        EIDOLON
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* LEFT Arrow: SYZYGY */}
-                                            <a href="/syzygy" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88] rounded-full border-[1.5px] bottom-[20%] md:-bottom-[10%] -left-[30%] md:left-[10%] -translate-y-1/2 cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
-                                                <div className="-rotate-90 animate-pulse w-full h-full relative">
-                                                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
-                                                </div>
-                                                <div className='absolute animate-bounce top-[150%] left-[30%] -translate-x-1/2 flex items-center justify-center w-16'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#fffa88] bg-black/60 px-1 rounded border border-[#fffa88]/30 whitespace-nowrap drop-shadow-md'>
-                                                        SYZYGY
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* RIGHT Arrow: PRIMA */}
-                                            <a href="/prima" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff] rounded-full border-[1.5px] bottom-[20%] md:-bottom-[10%] left-[200%] md:left-[182.5%] -translate-y-1/2 cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
-                                                <div className="rotate-90 animate-pulse w-full h-full relative">
-                                                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
-                                                </div>
-                                                <div className='absolute animate-bounce top-[150%] left-[70%] -translate-x-1/2 flex items-center justify-center w-14'>
-                                                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#88a9ff] bg-black/60 px-1 rounded border border-[#88a9ff]/30 whitespace-nowrap drop-shadow-md'>
-                                                        PRIMA
-                                                    </span>
-                                                </div>
-                                            </a>
-
-                                            {/* DOWN Arrow: Decoration */}
-                                            <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#ff8888]/30 rounded-full border-[1.5px] -bottom-[10%] md:-bottom-[45%] left-[155%] md:left-[150%] -translate-x-1/2 rotate-[180deg] opacity-50 pointer-events-none'>
-                                                <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#ff8888] [&_*]:stroke-[#ff8888]" />
-                                            </div>
-
-                                        </div>
-
-                                        {/* Analog Stick (Below D-pad) */}
-                                        <div className="absolute -bottom-0 -right-[240%] md:-right-[200%] -translate-x-1/2">
-                                            <GameboyGrayButton className="w-10 h-10 md:w-12 md:h-12 opacity-80" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* --- Right Control Cluster (Buttons) --- */}
-                                <div className="absolute top-[35%] right-[2%] w-[12%] h-[40%] pointer-events-auto">
-                                    <div className="relative w-full h-full">
-                                        {/* ABXY Diamond */}
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24">
-                                            <div className="absolute top-[20%] md:top-[30%] left-[45%] md:left-[25%] -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 border border-[#ff8888]/50 rounded-full flex items-center justify-center text-xs md:text-base text-[#ff8888] font-pixelify">X</div>
-                                            <div className="absolute -top-[25%] md:-top-[40%] left-[45%] md:left-[25%] -translate-x-1/2 w-6 h-6 md:w-8 md:h-8 border border-[#a0ff88]/50 rounded-full flex items-center justify-center text-xs md:text-base text-[#a0ff88] font-pixelify">B</div>
-                                            <div className="absolute top-[10%] md:-left-[20%] left-[10%] -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 border border-[#88a9ff]/50 rounded-full flex items-center justify-center text-xs md:text-base text-[#88a9ff] font-pixelify">Y</div>
-                                            <div className="absolute top-[10%] md:right-[30%] right-[20%] -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 border border-[#fffa88]/50 rounded-full flex items-center justify-center text-xs md:text-base text-[#fffa88] font-pixelify">A</div>
-                                        </div>
-
-                                        {/* Analog Stick (Below Buttons) */}
-                                        <div className="absolute -bottom-0 -left-[120%] -translate-x-1/2">
-                                            <GameboyGrayButton className="w-10 h-10 md:w-12 md:h-12 opacity-80" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* --- Bottom Center Pagination --- */}
-                                <div className="absolute top-[15%] left-1/2 -translate-x-1/2 flex space-x-4 pointer-events-auto">
-                                    {slides.map((_, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-[#C084FC] scale-125' : 'bg-white scale-60'}`}
-                                        />
-                                    ))}
-                                </div>
-
-                            </div>
-                        </div>
-                    )}
-
-
-
-                    {/* --- 4. BOTTOM DESCRIPTION SECTION --- */}
-                    {/* Displays the text for the current slide */}
-                    <div className="w-full flex-grow flex items-start mt-4">
-                        <div className="relative w-full xl:w-[95%] text-center">
-                            <a href={currentDataset.url} className="font-pixelify text-[#C084FC] text-sm md:text-lg lg:text-xl tracking-wide leading-relaxed animate-pulse mb-2 cursor-pointer">
-                                {`> ${currentDataset.accountDetail} <`}
-                            </a>
-                            <p className="font-pixelify text-white/80 text-sm md:text-lg lg:text-xl tracking-wide leading-relaxed animate-pulse">
-                                {` ${currentDataset.pages[currentSlide + 1] || "..."}`}
-                            </p>
-                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-[#C084FC]/50 to-transparent"></div>
-                        </div>
-                    </div>
-
-                    
+            <div className="flex h-full min-h-0 flex-col py-2">
+              <div>
+                <div className="inline-flex h-[22px] self-start rounded-md border border-blue-500/30 bg-blue-500/8 px-3 text-[0.7rem] text-slate-300 shadow-[inset_0_0_10px_rgba(59,130,246,0.10),0_0_12px_rgba(139,92,246,0.12)]">
+                  <span className="my-auto mr-2 h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.9)]" />
+                  <span className="my-auto">Project Detail</span>
                 </div>
-            </div>
 
-            {/* --- 5. THE ZOOM MODAL --- */}
-                {isModalOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={closeModal}>
-                        <div className="relative max-w-[95vw] max-h-[90vh]">
-                            <img 
-                                src={modalImage} 
-                                alt="Zoomed View" 
-                                className="w-full h-full object-contain rounded-lg shadow-[0_0_30px_rgba(192,132,252,0.3)] border border-[#C084FC]/30" 
-                                onClick={(e) => e.stopPropagation()} // Prevent closing if clicking image itself
-                            />
-                            <button 
-                                className="absolute -top-8 right-[0%] -translate-x-1/2 md:-right-10 text-white hover:text-[#C084FC] font-pixelify text-xl" 
-                                onClick={closeModal}
-                            >
-                                [CLOSE]
-                            </button>
-                        </div>
-                    </div>
+                <h1 className="mt-3 text-[clamp(2.5rem,3.5vw,3.25rem)] font-black leading-[1] tracking-[0] text-white drop-shadow-[0_0_22px_rgba(96,165,250,0.12)]">
+                  {project.title}{' '}
+                  <span className="bg-gradient-to-b from-[#8b5cf6] via-[#6d7dff] to-[#3b82f6] bg-clip-text text-transparent">
+                    {project.accent}
+                  </span>
+                </h1>
+                <p className="mt-3 max-w-[500px] text-[0.85rem] leading-[1.45] text-slate-200">
+                  {project.description}
+                </p>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3 shrink-0">
+                {project.liveHref && (
+                  <PrimaryAction href={project.liveHref} label="Live Demo" icon={<ArrowUpRight className="h-4 w-4" />} />
                 )}
-        </main>
-    );
-};
+                <SecondaryAction href={project.githubHref} label="GitHub" icon={<Github className="h-4 w-4" />} />
+                <SecondaryAction href="/projects" label="Back" icon={<ArrowLeft className="h-4 w-4" />} />
+              </div>
 
-export default ProjectPage;
+              <div className="mt-8 grid grid-cols-2 gap-3 shrink-0">
+                {project.details.map((detail) => (
+                  <div key={detail.label} className="flex items-center gap-3 rounded-[10px] border border-blue-500/20 bg-[#030612]/50 p-2.5 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
+                    <CloudyIconBox icon={detail.icon} className="h-[34px] w-[34px] rounded-[8px]" />
+                    <div className="min-w-0">
+                      <p className="text-[0.65rem] text-slate-400 uppercase tracking-wider">{detail.label}</p>
+                      <p className="truncate text-[0.75rem] font-medium text-white">{detail.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-2 shrink-0">
+                <p className="w-full text-[0.7rem] font-medium text-slate-400 uppercase tracking-wider mb-0.5">Tech Stack</p>
+                {project.stack.map((tag) => (
+                  <span
+                    key={tag.label}
+                    className={`rounded-[6px] border px-2.5 py-1 text-[0.72rem] leading-none ${tag.tone}`}
+                  >
+                    {tag.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col min-h-0 min-w-0">
+            <section className="relative flex flex-col min-h-0 h-full overflow-hidden rounded-xl p-[1.5px] shadow-[-12px_-12px_30px_rgba(96,165,250,0.1),12px_12px_30px_rgba(217,70,239,0.1),0_5px_20px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(96,165,250,0.6)_0%,rgba(139,92,246,0.5)_15%,#10162c_35%,#10162c_65%,rgba(236,72,153,0.5)_85%,rgba(217,70,239,0.6)_100%)] opacity-50" />
+              <div className="absolute -left-8 -top-8 z-0 h-40 w-40 rounded-full bg-blue-500/50 blur-[24px]" />
+              <div className="absolute -right-8 -bottom-8 z-0 h-40 w-40 rounded-full bg-fuchsia-500/50 blur-[24px]" />
+              <div className="relative z-10 flex min-h-0 flex-col h-full rounded-[10.5px] bg-[#0a1022] p-4">
+                <Backlight />
+                <div className="relative z-10 flex min-h-0 flex-col h-full gap-4">
+                <div className={`relative flex h-[50%] w-full shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-blue-500/16 bg-[#030612] shadow-[0_8px_20px_rgba(0,0,0,0.4)] ${activeSlide.image ? 'cursor-pointer' : ''}`} onClick={() => { if (activeSlide.image) setIsModalOpen(true) }}>
+                  {activeSlide.image ? (
+                    <>
+                      <img
+                        src={activeSlide.image}
+                        alt=""
+                        className="absolute inset-0 h-full w-full scale-[1.2] object-cover opacity-65 blur-2xl transition-all duration-500"
+                      />
+                      <img
+                        src={activeSlide.image}
+                        alt={activeSlide.title}
+                        className="relative z-10 max-h-[88%] w-auto max-w-[92%] rounded-[6px] border border-white/10 object-contain shadow-[0_15px_35px_rgba(0,0,0,0.8)] transition-all duration-500"
+                      />
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center bg-[#030612] transition-all duration-500">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.08),transparent_60%)]" />
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 shadow-[inset_0_0_12px_rgba(96,165,250,0.2)]">
+                        <Sparkles className="h-5 w-5 text-blue-400/50" />
+                      </div>
+                      <span className="relative z-10 text-[0.7rem] font-semibold tracking-widest text-blue-300/40">PREVIEW PENDING</span>
+                    </div>
+                  )}
+
+                {project.slides.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); showPrev(); }}
+                      className="group absolute left-3 z-20 flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#030612]/40 text-slate-300 backdrop-blur-md transition-all duration-300 hover:border-blue-400/50 hover:bg-[#0a1022]/80 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-95"
+                    >
+                        <ChevronLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 group-hover:text-blue-300" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); showNext(); }}
+                      className="group absolute right-3 z-20 flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#030612]/40 text-slate-300 backdrop-blur-md transition-all duration-300 hover:border-blue-400/50 hover:bg-[#0a1022]/80 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-95"
+                    >
+                        <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-blue-300" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+                <div className="mt-1 min-h-0 flex-1 overflow-y-auto custom-scrollbar pr-3">
+                  <h2 className="text-[1.05rem] font-semibold text-white">
+                {activeSlide.title}
+              </h2>
+                  <p className="mt-1.5 text-[0.8rem] leading-[1.45] text-slate-300">
+                {activeSlide.description}
+              </p>
+                  <ul className="mt-3.5 space-y-2.5">
+                {activeSlide.bullets.map((bullet) => (
+                      <li key={bullet} className="flex gap-2.5 text-[0.78rem] leading-[1.4] text-slate-300">
+                        <span className="mt-0.5 flex h-[16px] w-[16px] shrink-0 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-violet-300">
+                          <CheckCircle2 className="h-3 w-3" />
+                    </span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+              </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {project.bottomCards && project.bottomCards.length > 0 && (
+        <section className="tech-tile-border relative min-h-0 min-w-0 grid grid-cols-1 gap-4 overflow-hidden rounded-xl border border-blue-500/24 bg-[#0a1022]/76 p-4 shadow-[0_5px_20px_rgba(0,0,0,0.3)] backdrop-blur-xl md:grid-cols-3 md:gap-0 md:p-5">
+          <Backlight intensity="subtle" />
+          {project.bottomCards.map((card, index) => (
+            <div
+              key={card.title}
+              className={`relative z-10 flex min-h-0 min-w-0 items-start gap-4 ${
+                index !== 2 ? 'md:border-r md:border-blue-500/16 md:pr-5' : ''
+              } ${index !== 0 ? 'md:pl-5' : ''}`}
+            >
+              <CloudyIconBox icon={card.icon} className="h-[44px] w-[44px] rounded-[12px]" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[0.85rem] font-semibold text-white">{card.title}</p>
+                <p className="mt-2 line-clamp-3 text-[0.78rem] leading-[1.5] text-slate-300">{card.description}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+        )}
+
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <button
+              className="absolute right-4 top-4 z-50 text-white/70 transition-colors hover:text-white"
+              onClick={() => setIsModalOpen(false)}
+              aria-label="Close image viewer"
+            >
+              <X className="h-8 w-8" />
+            </button>
+            <img
+              src={activeSlide.image}
+              alt={activeSlide.title}
+              className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
+      </div>
+    </main>
+  )
+}
+
+function PrimaryAction({ href, label, icon }: { href: string; label: string; icon: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative inline-flex h-[38px] w-max items-center justify-center gap-2 overflow-hidden rounded-[8px] bg-blue-600 px-5 text-[0.8rem] font-medium text-white shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(96,165,250,0.8)] active:scale-95"
+    >
+      <span className="absolute -left-6 -top-6 z-0 h-[100px] w-[100px] rounded-full bg-violet-500/80 blur-[16px] transition-all duration-500 group-hover:opacity-0" />
+      <span className="absolute -right-6 -bottom-6 z-0 h-[100px] w-[100px] rounded-full bg-sky-400/80 blur-[16px] transition-all duration-500 group-hover:opacity-0" />
+      <span className="absolute left-1/2 top-1/2 z-0 h-[60px] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fuchsia-400/60 blur-[16px] transition-all duration-500 group-hover:opacity-0" />
+
+      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <div className="absolute inset-0 animate-spin" style={{ animationDuration: '4s' }}>
+          <span className="absolute -left-8 -top-8 h-[100px] w-[100px] rounded-full bg-violet-500/90 blur-[16px] opacity-80" />
+        </div>
+        <div className="absolute inset-0 animate-spin" style={{ animationDuration: '6s', animationDirection: 'reverse' }}>
+          <span className="absolute -bottom-8 -right-8 h-[100px] w-[100px] rounded-full bg-sky-400/90 blur-[16px] opacity-80" />
+        </div>
+        <div className="absolute left-1/2 top-1/2 h-[60px] w-[60px] -translate-x-1/2 -translate-y-1/2 animate-pulse">
+          <span className="absolute inset-0 rounded-full bg-fuchsia-400/80 blur-[16px] opacity-60" />
+        </div>
+      </div>
+      <span className="relative z-10 transition-transform duration-300 group-hover:-translate-x-0.5">{label}</span>
+      <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">{icon}</span>
+    </a>
+  )
+}
+
+function SecondaryAction({ href, label, icon }: { href: string; label: string; icon: ReactNode }) {
+  const isExternal = href.startsWith('http')
+
+  return (
+    <a
+      href={href}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      className="group relative inline-flex h-[38px] w-max items-center justify-center gap-1.5 rounded-[8px] bg-blue-500/24 p-[1px] transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.6)] active:scale-95"
+    >
+      <span className="absolute inset-0 z-0 rounded-md bg-gradient-to-br from-blue-400 via-indigo-500 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="relative flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-[7px] bg-[#0c1327] px-4 text-[0.78rem] font-medium text-blue-100 transition-all duration-300 group-hover:bg-[#0c1327]/40 group-hover:text-white group-hover:shadow-[inset_0_0_10px_rgba(59,130,246,0.4)]">
+        <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+        <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-blue-300">{icon}</span>
+        <span className="relative z-10 whitespace-nowrap transition-transform duration-300 group-hover:translate-x-0.5">{label}</span>
+      </div>
+    </a>
+  )
+}
+
+function CloudyIconBox({ icon: Icon, className }: { icon: ComponentType<SVGProps<SVGSVGElement>>; className: string }) {
+  const id = useId().replace(/:/g, '')
+  return (
+    <div className={`relative flex shrink-0 items-center justify-center overflow-hidden border border-blue-500/14 bg-[linear-gradient(180deg,rgba(33,48,104,0.96),rgba(17,25,55,0.92))] shadow-[inset_0_0_14px_rgba(96,165,250,0.08),0_0_14px_rgba(139,92,246,0.06)] ${className}`}>
+      <span className="absolute -left-2 -top-2 z-0 h-6 w-6 rounded-full bg-blue-500/40 blur-[5px]" />
+      <span className="absolute -right-2 -bottom-2 z-0 h-7 w-7 rounded-full bg-indigo-800/60 blur-[6px]" />
+      <span className="absolute left-1/2 top-1/2 z-0 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-300/20 blur-[4px]" />
+      <Icon className="relative z-10 h-[55%] w-[55%] drop-shadow-sm" stroke={`url(#fourTone-${id})`}>
+        <defs>
+          <radialGradient id={`toneA-${id}`} cx="20%" cy="20%" r="60%">
+            <stop offset="0%" stopColor="#60a5fa" />
+            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`toneB-${id}`} cx="80%" cy="80%" r="60%">
+            <stop offset="0%" stopColor="#d946ef" />
+            <stop offset="100%" stopColor="#d946ef" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`toneC-${id}`} cx="80%" cy="20%" r="60%">
+            <stop offset="0%" stopColor="#8b5cf6" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`toneD-${id}`} cx="20%" cy="80%" r="60%">
+            <stop offset="0%" stopColor="#818cf8" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0" />
+          </radialGradient>
+
+          <pattern id={`fourTone-${id}`} width="24" height="24" patternUnits="userSpaceOnUse">
+            <rect width="24" height="24" fill="#8b5cf6" />
+            <rect width="24" height="24" fill={`url(#toneA-${id})`} />
+            <rect width="24" height="24" fill={`url(#toneB-${id})`} />
+            <rect width="24" height="24" fill={`url(#toneC-${id})`} />
+            <rect width="24" height="24" fill={`url(#toneD-${id})`} />
+          </pattern>
+        </defs>
+      </Icon>
+    </div>
+  )
+}
+
+function MpLogo() {
+  return (
+    <svg
+      aria-label="MP"
+      className="h-[28px] w-[45px] overflow-visible drop-shadow-[0_0_10px_rgba(96,165,250,0.72)]"
+      role="img"
+      viewBox="0 0 58 34"
+    >
+      <defs>
+        <linearGradient id="mpLogoGradientProject" x1="4" x2="54" y1="8" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#60a5fa" />
+          <stop offset="0.48" stopColor="#3b82f6" />
+          <stop offset="1" stopColor="#8b5cf6" />
+        </linearGradient>
+        <filter id="mpLogoGlowProject" x="-35%" y="-55%" width="170%" height="210%">
+          <feGaussianBlur stdDeviation="1.45" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="0 0 0 0 0.28 0 0 0 0 0.56 0 0 0 0 1 0 0 0 0.62 0"
+          />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#mpLogoGlowProject)" transform="skewX(-9)">
+        <text
+          fill="url(#mpLogoGradientProject)"
+          fontFamily="Arial Black, Arial, sans-serif"
+          fontSize="29"
+          fontStyle="italic"
+          fontWeight="900"
+          letterSpacing="-8"
+          x="6"
+          y="28"
+        >
+          MP
+        </text>
+      </g>
+    </svg>
+  )
+}

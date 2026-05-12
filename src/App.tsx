@@ -1,884 +1,749 @@
+import type { ReactNode } from 'react'
+import {
+  ArrowRight,
+  Code2,
+  Download,
+  Github,
+  GraduationCap,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  UserRound,
+} from 'lucide-react'
 import Dither from './components/Dither'
-import SocialBox from './assets/Social Box Desptop view everything/7.svg?react';
-import Static from './assets/Social Box Desptop view everything/6.svg?react';
-import ProfilePhotoBox from './assets/Social Box Desptop view everything/5.svg?react';
-import ProfilePicture from './assets/Social Box Desptop view everything/3.png';
-import Barcode from './assets/Social Box Desptop view everything/4.svg?react';
-import TabletAndMobileViewSocialBox from './assets/Social Box Desptop view everything/Mobile View Social Box.svg?react';
+import { Backlight } from './components/Backlight'
+import MyResume from './assets/resume/Min Paing Hein CV.pdf'
+import EidolonPreview from '../docs/images/eidolon/note-viewer.png'
+import SyzygyPreview from '../docs/images/syzygy/analysis-shot.png'
+import PrimaPreview from './assets/Screenshots/Prima/1.png'
 
-import GmailIcon from './assets/Social Icon/1.svg?react';
-import LinkedInIcon from './assets/Social Icon/2.svg?react';
-import GithubIcon from './assets/Social Icon/3.svg?react';
-import InstagramIcon from './assets/Social Icon/4.svg?react';
+import ProfilePicture from './assets/Social Box Desptop view everything/3.png'
 
-import Gameboy from './assets/Game Boy/Game boy desktop view.svg?react';
-import MobileGameboy from './assets/Game Boy/mobile view game boy.svg?react';
-import GameboyArrow from './assets/Game Boy/Gameboy arrow.svg?react';
-import GameboyGrayButton from './assets/Game Boy/Game boy gray button.svg?react';
-import ArrowGlow from './assets/Game Boy/Arrow glow.svg?react';
-
-import CSSLogo from './assets/Front End/css-svgrepo-com.svg?react';
-import HTMLLogo from './assets/Front End/html-svgrepo-com.svg?react';
-import NextJSLogo from './assets/Front End/nextjs-fill-svgrepo-com.svg?react';
-import NodeJSLogo from './assets/Front End/node-js-svgrepo-com.svg?react';
-import ReactLogo from './assets/Front End/react-svgrepo-com.svg?react';
-import TailwindCssLogo from './assets/Front End/tailwind-svgrepo-com.svg?react';
-import TypeScriptLogo from './assets/Front End/typescript-16-svgrepo-com.svg?react';
-import ViteLogo from './assets/Front End/vite icon.svg?react';
-
-import ExpressLogo from './assets/Backend/express-svgrepo-com.svg?react';
-import FastApilogo from './assets/Backend/fastapi-svgrepo-com (1).svg?react';
-import LaravelLogo from './assets/Backend/laravel-svgrepo-com.svg?react';
-import MySQLLogo from './assets/Backend/mysql-svgrepo-com.svg?react';
-import PHPlogo from './assets/Backend/php01-svgrepo-com.svg?react';
-import PostgreLogo from './assets/Backend/postgresql-logo-svgrepo-com.svg?react';
-import PrismaLogo from './assets/Backend/prisma-svgrepo-com.svg?react';
-
-import AWSLogo from './assets/Tools/aws-svgrepo-com.svg?react';
-import DockerLogo from './assets/Tools/docker-svgrepo-com.svg?react';
-import GitLogo from './assets/Tools/git-svgrepo-com.svg?react';
-import LinuxLogo from './assets/Tools/linux-svgrepo-com.svg?react';
-import NginxLogo from './assets/Tools/nginx-svgrepo-com.svg?react';
-
-
-
-import MyResume from './assets/resume/Min Paing Hein CV.pdf';
-import { useState, useEffect } from 'react';
-
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) setMatches(media.matches);
-    const listener = () => setMatches(media.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
-  return matches;
+type Project = {
+  title: string
+  description: string
+  image: string
+  href: string
+  tags: { label: string; tone: string }[]
 }
 
-const HollowText = ({ children, className = "", size = "text-5xl" }: { children: string, className?: string, size?: string }) => {
-  return (
-    <div className={`relative ${size} ${className} font-bold leading-none`}>
-      {/* Layer 1: The Solid Shadow (Back) */}
-      <span className="absolute left-[8px] top-[4px] text-[#2A2A35] select-none z-0">
-        {children}
-      </span>
-      {/* Layer 2: The Hollow Outline (Front) */}
-      <span
-        className="relative z-10 text-transparent"
-        style={{ WebkitTextStroke: '2.5px #C084FC' }} // Purple outline
-      >
-        {children}
-      </span>
-    </div>
-  )
+type Tech = {
+  label: string
+  custom:
+    | 'html'
+    | 'css'
+    | 'typescript'
+    | 'react'
+    | 'next'
+    | 'tailwind'
+    | 'node'
+    | 'express'
+    | 'postgres'
+    | 'prisma'
+    | 'docker'
+    | 'aws'
+    | 'git'
 }
+
+const navItems = ['Home', 'Projects', 'Contact']
+
+const projects: Project[] = [
+  {
+    title: 'Eidolon AI Suite',
+    description:
+      'AI-powered study platform for transcription, lecture-note generation, exam prep, group collaboration, credit billing, and admin operations.',
+    image: EidolonPreview,
+    href: '/projects/eidolon',
+    tags: [
+      { label: 'Next.js 15', tone: 'text-blue-300 bg-blue-500/10' },
+      { label: 'React 19', tone: 'text-cyan-300 bg-cyan-500/10' },
+      { label: 'PostgreSQL', tone: 'text-indigo-300 bg-indigo-500/10' },
+    ],
+  },
+  {
+    title: 'Syzygy',
+    description:
+      'Static analysis platform for detecting API drift between frontend API calls and backend route definitions across GitHub repositories before issues reach runtime.',
+    image: SyzygyPreview,
+    href: '/projects/syzygy',
+    tags: [
+      { label: 'React', tone: 'text-cyan-300 bg-cyan-500/10' },
+      { label: 'TypeScript', tone: 'text-blue-300 bg-blue-500/10' },
+      { label: 'Node.js', tone: 'text-green-300 bg-green-500/10' },
+      { label: 'MySQL', tone: 'text-amber-300 bg-amber-500/10' },
+    ],
+  },
+  {
+    title: 'Prima',
+    description:
+      'Visual data cleaning and pipeline generation tool for data scientists. From raw CSV to production-ready Python code in minutes.',
+    image: PrimaPreview,
+    href: '/projects/prima',
+    tags: [
+      { label: 'React', tone: 'text-cyan-300 bg-cyan-500/10' },
+      { label: 'FastAPI', tone: 'text-emerald-300 bg-emerald-500/10' },
+      { label: 'scikit-learn', tone: 'text-purple-300 bg-purple-500/10' },
+    ],
+  },
+]
+
+const techStack: Tech[] = [
+  { label: 'HTML5', custom: 'html' },
+  { label: 'CSS3', custom: 'css' },
+  { label: 'TypeScript', custom: 'typescript' },
+  { label: 'React', custom: 'react' },
+  { label: 'Next.js', custom: 'next' },
+  { label: 'Tailwind CSS', custom: 'tailwind' },
+  { label: 'Node.js', custom: 'node' },
+  { label: 'Express.js', custom: 'express' },
+  { label: 'PostgreSQL', custom: 'postgres' },
+  { label: 'Prisma', custom: 'prisma' },
+  { label: 'Docker', custom: 'docker' },
+  { label: 'AWS', custom: 'aws' },
+  { label: 'Git', custom: 'git' },
+]
 
 function App() {
-
-  const maxIndex = 2;
-
-  const [gameboyIndex, setGameboyIndex] = useState<number>(0);
-
-  const addIndex = (index: number) => {
-    index++;
-
-    if (index >= 3) {
-      return index - 3;
-    }
-
-    return index;
-  }
-
-  const subtractIndex = (index: number) => {
-    index--;
-
-    if (index < 0) {
-      return maxIndex;
-    }
-
-    return index;
-  }
-
-  const isDesktop = useMediaQuery('(min-width: 1280px)');
-
   return (
-    <main className="relative w-full h-screen overflow-hidden bg-gray-900">
-
-      {/* LAYER 1: Dither Background (Bottom) */}
-      <div className='absolute inset-0 z-0'>
+    <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#020713] font-sans text-white antialiased">
+      <div className="absolute inset-0 opacity-35">
         <Dither
-          waveColor={[0.5, 0.0, 0.7]}
+          waveColor={[0.03, 0.09, 0.36]}
           disableAnimation={false}
           enableMouseInteraction={false}
-          colorNum={4}
-          waveAmplitude={0.3}
-          waveFrequency={3}
-          waveSpeed={0.05}
+          colorNum={5}
+          pixelSize={2}
+          waveAmplitude={0.2}
+          waveFrequency={2.2}
+          waveSpeed={0.025}
         />
       </div>
 
-      {/* LAYER 2: Filter Layer (Middle) */}
-      <div className='absolute xl:left-[5%] top-0 h-screen w-full xl:w-[90%] bg-black/70 xl:bg-black/70 z-10 backdrop-blur-sm pointer-events-none xl:[clip-path:polygon(4%_0,92%_0,94%_100%,7%_100%)]'
-      >
+      {/* Deep Space Nebula Background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-90">
+        {/* Massive base space clouds */}
+        <div className="absolute -left-[20%] top-[-10%] h-[70%] w-[70%] -rotate-12 rounded-[100%] bg-blue-950/80 blur-[130px]" />
+        <div className="absolute -right-[10%] top-[10%] h-[80%] w-[60%] rotate-12 rounded-[100%] bg-indigo-950/80 blur-[140px]" />
+        <div className="absolute -bottom-[20%] -left-[10%] h-[70%] w-[80%] rotate-[-25deg] rounded-[100%] bg-violet-950/70 blur-[130px]" />
+        
+        {/* Mid-layer color mixtures */}
+        <div className="absolute left-[15%] top-[30%] h-[40%] w-[50%] rotate-[15deg] rounded-[100%] bg-blue-900/40 blur-[100px]" />
+        <div className="absolute right-[15%] bottom-[20%] h-[50%] w-[40%] rotate-[-30deg] rounded-[100%] bg-fuchsia-950/30 blur-[120px]" />
+        <div className="absolute left-[40%] top-[60%] h-[30%] w-[40%] rotate-[45deg] rounded-[100%] bg-cyan-950/20 blur-[100px]" />
       </div>
 
-      {/* LAYER 3: Content Box (Top) */}
-      <div className='relative z-20 h-full flex flex-col items-center w-[95%] xl:w-[85%] mx-auto text-white overflow-hidden xl:[clip-path:polygon(1.3%_0,100%_0,100%_100%,4.3%_100%)]' >
-        <div className='offsetBox w-full xl:w-[94%] ml-auto xl:border-l-3 border-[#a31eff] h-full'>
-          <div className='topSplit w-full h-[40%] xl:h-[56%] grid grid-cols-[60%_40%] xl:grid-cols-[43%_56%] grid-rows-[35%_65%] md:grid-rows-[40%_60%]'>
+      {/* Dark Vignette and Depth Overlay (Replaces the bright lightbulbs) */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(2,6,18,0.1),rgba(0,0,0,0.98)),radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.5)_80%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:28px_28px] opacity-[0.16]" />
+      <div className="pointer-events-none absolute bottom-[95px] left-0 h-[285px] w-[170px] bg-[radial-gradient(circle,rgba(28,113,255,0.55)_1px,transparent_1.5px)] bg-[size:9px_9px] opacity-60 [mask-image:linear-gradient(90deg,#000,transparent)]" />
 
-            {/* Left Text Column */}
-            <div className='grid topLeftText col-span-2 xl:col-span-1  row-span-1 border-[#a31eff]/50 border-b-3 w-[115%] xl:-ml-[15%]'>
-              <div className="relative grid grid-cols-[12%_80%] xl:grid-cols-[18%_72%] grid-rows-2 ml-3 xl:ml-[15%] mt-auto mb-2 md:mb-5 text-3xl md:text-5xl font-['BrickSans'] gap-y-1 md:gap-y-3 tracking-wide">
-                <div className='grid row-span-2 col-span-1 my-auto '><HollowText size="text-7xl md:text-9xl">P</HollowText></div>
-                <div className='grid row-span-1 col-span-1 ml-2 mt-2'>ersonal</div>
-                <div className='grid row-span-1 col-span-1 md:-ml-2'><HollowText size="text-3xl md:text-5xl ">Information</HollowText></div>
-                <div className='absolute bg-[#332936] w-[55%] md:w-[50%] xl:w-[80%] h-[35%] bottom-0 md:-bottom-2 left-[15%] xl:right-0 z-[-1]'></div>
-              </div>
-            </div>
+      <div className="relative z-10 grid h-[92vh] w-[calc(100vw-96px)] max-w-[1500px] grid-rows-[56px_minmax(0,0.9fr)_minmax(0,1.1fr)] gap-4">
+        <div className="flex min-h-0 items-start">
+          <header className="nav-border relative h-full w-full overflow-hidden rounded-xl border border-blue-300/35 bg-[#0b1021]/78 backdrop-blur-xl">
+            <div className="flex h-full items-center justify-between gap-4 px-5">
+            <a href="/" className="flex items-center gap-5">
+              <MpLogo />
+              <span className="text-[0.95rem] font-semibold text-white">Min Paing Hein</span>
+            </a>
 
-
-
-            {isDesktop && (
-              <div className="relative hidden xl:grid col-span-1 row-span-2 text-3xl">
-
-                {/* 1. Background Social Box - Using % for position */}
-                <SocialBox className="absolute w-full h-[80%] z-[30] bottom-0 right-0 scale-106" />
-
-                {/* 2. Static Element - Changed 'top-28'/'right-5' to % */}
-                <Static className="absolute w-[45%] h-[8%] z-[50] right-[1.5%] top-[25%]" />
-
-                {/* 3. THE FIX: A Wrapper Div for Frame + Photo */}
-                {/* We position THIS div using percentages. The frame and photo live inside. */}
-                <div className="absolute z-[40] w-[75%] h-[60%] top-[32%] -left-[8%]">
-
-                  {/* The SVG Frame: Fills the wrapper */}
-                  <ProfilePhotoBox className="absolute inset-0 w-full h-full z-20 pointer-events-none" />
-
-                  <Barcode className="absolute -top-[35%] scale-40 w-[90%] h-full" />
-
-                  {/* The Image: Fills the wrapper (behind the frame) */}
-                  {/* object-cover ensures it fills the shape without stretching */}
-                  <img
-                    src={ProfilePicture}
-                    className="absolute z-30 object-cover"
-                    style={{
-                      // Anchor to bottom so they stay aligned at the feet/bottom edge
-                      bottom: '0',
-                      // Center horizontally relative to the frame
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      // WIDTH: Adjust this to fill the frame width (e.g. 95% or 100%)
-                      width: '100%',
-                      // HEIGHT: Make this >100% to protrude out the top!
-                      // 120% means it sticks out the top by 20% of the frame's height.
-                      height: '125%'
-                    }}
-                  />
-                </div>
-
-                <div className='social-text-box  absolute z-[50] flex flex-col top-[33%] right-[7%] w-[42%] h-[58%] px-4 text-base'>
-
-                  {/* Header */}
-                  <span className='font-neoneon text-[#e4bcff] text-3xl tracking-[.25em] border-b-[1.5px] border-[#e4bcff] pb-2 drop-shadow-[0_0_8px_rgba(228,188,255,0.6)]'>
-                    Socials:
-                  </span>
-
-                  {/* 1. GMAIL (mailto link) */}
-                  <a
-                    href="mailto:minph7102004@gmail.com"
-                    className='flex mt-4 items-center group cursor-pointer'
-                  >
-                    <GmailIcon className="w-7 h-7 shrink-0 fill-[#e4bcff] drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-transform group-hover:scale-110" />
-                    <span className='font-pixelify text-white ml-3 text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                      minph7102004@gmail.com
-                    </span>
-                  </a>
-
-                  {/* 2. GITHUB */}
-                  <a
-                    href="https://github.com/False10101"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className='flex mt-3 items-center group cursor-pointer'
-                  >
-                    <GithubIcon className="w-7 h-7 shrink-0 fill-[#e4bcff] drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-transform group-hover:scale-110" />
-                    <span className='font-pixelify text-white ml-3 text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                      https://github.com/False10101
-                    </span>
-                  </a>
-
-                  {/* 3. LINKEDIN */}
-                  <a
-                    href="https://www.linkedin.com/in/min-paing-hein-676465245/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className='flex mt-3 items-center group cursor-pointer'
-                  >
-                    <LinkedInIcon className="w-7 h-7 shrink-0 fill-[#e4bcff] drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-transform group-hover:scale-110" />
-                    <span className='font-pixelify text-white ml-3 text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                      https://www.linkedin.com/in/min-paing-hein-676465245/
-                    </span>
-                  </a>
-
-                  {/* 4. INSTAGRAM */}
-                  <a
-                    href="https://instagram.com/minpaingheinn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className='flex mt-3 items-center group cursor-pointer'
-                  >
-                    <InstagramIcon className="w-7 h-7 shrink-0 fill-[#e4bcff] drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-transform group-hover:scale-110" />
-                    <span className='font-pixelify text-white ml-3 text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                      https://instagram.com/minpaingheinn
-                    </span>
-                  </a>
-
-                  {/* 5. DOWNLOAD BUTTON - Pushed to bottom with mt-auto */}
-                  <a
-                    href={MyResume}
-                    download="Min_Paing_Hein_CV.pdf"
-                    className='mt-auto w-full'
-                  >
-                    <button className='w-full rounded-sm border-[1.5px] border-[#e4bcff] text-[#e4bcff] font-pixelify uppercase tracking-widest text-lg hover:bg-[#e4bcff] hover:text-[#1a1a1a] hover:drop-shadow-[0_0_15px_rgba(228,188,255,0.6)] transition-all duration-300 group flex items-center justify-center gap-3'>
-
-                      <DownloadIcon className="w-4 h-4 drop-shadow-[0_0_2px_rgba(228,188,255,0.8)] group-hover:drop-shadow-none transition-transform group-hover:scale-110" />
-
-                      <span className="drop-shadow-[0_0_2px_rgba(228,188,255,0.8)] group-hover:drop-shadow-none text-base">
-                        Download CV
-                      </span>
-                    </button>
-                  </a>
-
-                </div>
-
-              </div>
-
-            )}
-
-            <div className='grid topLeftText col-span-1 row-span-1 grid-cols-[35%_65%] mt-7 md:mt-10 text-sm md:text-xl items-start'>
-
-              {/* --- ROW 1: NAME (Both sides glow) --- */}
-              {/* Left Column Item */}
-              <div className='font-tiny5 uppercase tracking-widest pl-3 md:pl-16 text-[#e4bcff] pr-10 h-full drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                Name:
-              </div>
-              {/* Right Column Item */}
-              <div className='font-tiny5 tracking-widest uppercase md:pl-4 text-[#e4bcff] drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                Min Paing Hein
-              </div>
-
-              {/* --- ROW 2: YEAR (Only left glows) --- */}
-              <div className='font-tiny5 uppercase tracking-widest pl-3 md:pl-16 text-[#e4bcff] pr-10 h-full drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                Year:
-              </div>
-              <div className='font-pixelify font-normal tracking-tight md:pl-4 text-sm md:text-lg'>
-                Third Year
-              </div>
-
-              {/* --- ROW 3: MAJOR (Only left glows) --- */}
-              <div className='font-tiny5 uppercase tracking-widest pl-3 md:pl-16 text-[#e4bcff] pr-10 h-full drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                Major:
-              </div>
-              <div className='font-pixelify font-normal tracking-tight md:pl-4 text-sm md:text-lg'>
-                Computer Science
-              </div>
-
-              {/* --- ROW 4: Type (Only left glows) --- */}
-              <div className='font-tiny5 uppercase tracking-widest pl-3 md:pl-16 text-[#e4bcff] pr-10 h-full drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                Type:
-              </div>
-              <div className='font-pixelify font-normal tracking-tight md:pl-4 text-sm md:text-lg'>
-                FullStack Developer
-              </div>
-
-              {/* --- ROW 5: SCHOOL (Only left glows) --- */}
-              <div className='font-tiny5 uppercase tracking-widest pl-3 md:pl-16 text-[#e4bcff] pr-10 h-full drop-shadow-[0_0_3px_rgba(228,188,255,0.8)]'>
-                School:
-              </div>
-              <div className='font-pixelify font-normal tracking-tight md:pl-4 text-xs md:text-lg'>
-                King Mongkut University of Technology Thonburi (KMUTT)
-              </div>
-
-            </div>
-
-            {!isDesktop && (
-              <div className='grid w-full p-3 h-full relative xl:hidden col-span-1 overflow-none'>
-                
-                {/* 1. IMAGE WRAPPER: Kept h-full (Restored original size) */}
-                <div className="absolute z-[40] w-full h-full top-0 right-0">
-
-                  {/* FRAME: Moved UP to top-[5%] (was 30%). Kept original dimensions. */}
-                  <ProfilePhotoBox preserveAspectRatio="none" className="absolute top-[15%] md:top-[5%] -left-[35%] md:-left-[15%] w-[170%] md:w-[130%] h-[70%] md:h-[80%] z-20 pointer-events-none" />
-
-                  <Barcode className="absolute hidden md:block -top-[30%] scale-40 w-[90%] h-full z-10" />
-
-                  {/* IMAGE: Lifted bottom to '20%' to follow the frame upwards. Kept original dimensions. */}
-                  <img
-                    src={ProfilePicture}
-                    className="absolute z-30 object-cover h-[80%] md:h-[100%]"
-                    style={{
-                      bottom: '15%', // Lifted up to match the frame
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                    }}
-                  />
-                </div>
-
-                {/* 2. DOWNLOAD BUTTON: Placed at absolute bottom */}
+            <nav className="hidden h-full items-center gap-12 lg:flex">
+              {navItems.map((item, index) => (
                 <a
-                  href={MyResume}
-                  download="Min_Paing_Hein_CV.pdf"
-                  className='absolute bottom-2 left-1/2 -translate-x-1/2 w-[90%] md:w-[70%] animate-pulse z-50'
+                  key={item}
+                  href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                  className={`relative flex h-full items-center text-[0.88rem] transition-all duration-200 active:scale-95 ${
+                    index === 0
+                      ? 'text-blue-300 drop-shadow-[0_0_7px_rgba(96,165,250,0.74)]'
+                      : 'text-white/90 hover:text-blue-300'
+                  }`}
                 >
-                  <button className='w-full rounded-sm border-[1.5px] border-[#e4bcff] text-[#e4bcff] font-pixelify uppercase tracking-widest text-[10px] md:text-sm py-1 hover:bg-[#e4bcff] hover:text-[#1a1a1a] hover:drop-shadow-[0_0_15px_rgba(228,188,255,0.6)] transition-all duration-300 group flex items-center justify-center gap-2'>
+                  {item}
+                  {index === 0 ? (
+                    <>
+                      <span className="absolute inset-x-[-10px] bottom-[-1px] h-px bg-gradient-to-r from-transparent via-white to-blue-200/90 shadow-[0_0_6px_rgba(219,234,254,0.95)]" />
+                      <span className="absolute bottom-[-4px] left-1/2 h-[6px] w-[48px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.82),rgba(96,165,250,0.40)_34%,transparent_68%)] blur-[2px]" />
+                    </>
+                  ) : null}
+                </a>
+              ))}
+            </nav>
+
+            <a
+              href={MyResume}
+              download="Min_Paing_Hein_CV.pdf"
+              className="group hidden h-[38px] rounded-[10px] bg-gradient-to-br from-blue-400 via-indigo-500 to-violet-600 p-[1px] shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.8)] active:scale-95 lg:inline-flex"
+            >
+              <div className="relative flex h-full w-full items-center gap-2 overflow-hidden rounded-[9px] bg-[#090e1f] px-4 text-[0.88rem] font-medium text-blue-100 transition-all duration-300 group-hover:bg-[#090e1f]/40 group-hover:text-white group-hover:shadow-[inset_0_0_15px_rgba(59,130,246,0.4)]">
+                <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+                <Download className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-blue-300" />
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">Download CV</span>
+              </div>
+            </a>
+          </div>
+          </header>
+        </div>
+
+        <section
+          id="home"
+          className="grid min-h-0 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)]"
+        >
+            <div className="relative flex h-full min-w-0 flex-col pl-8">
+              <span className="absolute bottom-10 left-0 top-2 w-px bg-gradient-to-b from-blue-500/70 via-blue-500/25 via-[82%] to-transparent" />
+              <span className="absolute left-[-1.5px] top-2 h-[50px] w-[4px] rounded-full border border-blue-400 bg-gradient-to-b from-blue-600 via-white to-blue-600 shadow-[0_0_14px_rgba(59,130,246,1)]" />
+
+              <div className="flex h-full min-h-0 flex-col">
+                <div className="inline-flex h-[22px] self-start rounded-md border border-blue-500/30 bg-blue-500/8 px-3 text-[0.7rem] text-slate-300 shadow-[inset_0_0_10px_rgba(59,130,246,0.10),0_0_12px_rgba(139,92,246,0.12)]">
+                  <span className="my-auto mr-2 h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.9)]" />
+                  <span className="my-auto">Full-Stack Developer</span>
+                </div>
+
+                <h1 className="mt-2 text-[clamp(2.25rem,3.4vw,3.15rem)] font-black leading-[1] tracking-[0] text-white drop-shadow-[0_0_22px_rgba(96,165,250,0.12)]">
+                  Min Paing{' '}
+                  <span className="hein-texture bg-clip-text text-transparent">
+                    Hein
+                  </span>
+                </h1>
+                <p className="subtitle-texture mt-2 bg-clip-text text-[1.05rem] font-medium leading-none text-transparent">
+                  Full-Stack Web Developer
+                </p>
+                <p className="mt-2 max-w-[560px] text-[0.8rem] leading-[1.35] text-slate-200">
+                  Computer Science student building practical web apps and polished
+                  interfaces.
+                </p>
+
+                <div
+                  id="about"
+                  className="tech-tile-border relative mt-3 w-[min(100%,520px)] overflow-hidden rounded-xl border border-blue-500/24 bg-[#0a1022]/76 px-4 py-2.5 backdrop-blur-xl"
+                >
+                  <Backlight intensity="subtle" />
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/14 text-blue-200 shadow-[inset_0_0_16px_rgba(96,165,250,0.14),0_0_18px_rgba(139,92,246,0.14)]">
+                      <UserRound className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="text-[0.95rem] font-semibold leading-tight text-white">
+                        About
+                      </h2>
+                      <p className="mt-1 text-[0.76rem] leading-[1.35] text-slate-300">
+                        3rd-year CS student at KMUTT. I've been building and running my own web products since second year — currently operating a live AI platform with paying users, all self-hosted.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center gap-3">
+                  <a
+                    href="/projects"
+                    className="group relative inline-flex h-[36px] w-[142px] items-center justify-center gap-3 overflow-hidden rounded-[8px] bg-blue-600 text-[0.8rem] font-medium text-white shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(96,165,250,0.8)] active:scale-95"
+                  >
+                    {/* Vibrant cloudy resting state blobs */}
+                    <span className="absolute -left-6 -top-6 z-0 h-24 w-24 rounded-full bg-violet-500/80 blur-[12px] transition-all duration-500 group-hover:opacity-0" />
+                    <span className="absolute -right-6 -bottom-6 z-0 h-28 w-28 rounded-full bg-sky-400/80 blur-[14px] transition-all duration-500 group-hover:opacity-0" />
+                    <span className="absolute left-1/2 top-1/2 z-0 h-16 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-fuchsia-400/60 blur-[10px] transition-all duration-500 group-hover:opacity-0" />
                     
-                    <DownloadIcon className="w-3 h-3 md:w-4 md:h-4 drop-shadow-[0_0_2px_rgba(228,188,255,0.8)] group-hover:drop-shadow-none transition-transform group-hover:scale-110" />
-                    
-                    <span className="drop-shadow-[0_0_2px_rgba(228,188,255,0.8)] group-hover:drop-shadow-none whitespace-nowrap">
-                      Download CV
-                    </span>
-                  </button>
-                </a>
+                    {/* Active hovering continuous blobs */}
+                    <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                      <div className="absolute inset-0 animate-spin" style={{ animationDuration: '4s' }}>
+                        <span className="absolute -left-8 -top-8 h-24 w-24 rounded-full bg-violet-500/90 blur-[12px] opacity-80" />
+                      </div>
+                      <div className="absolute inset-0 animate-spin" style={{ animationDuration: '6s', animationDirection: 'reverse' }}>
+                        <span className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-sky-400/90 blur-[14px] opacity-80" />
+                      </div>
+                      <div className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 animate-pulse">
+                        <span className="absolute inset-0 rounded-full bg-fuchsia-400/80 blur-[10px] opacity-60" />
+                      </div>
+                    </div>
 
-              </div>
-            )}
-          </div>
-
-          <div className='hidden relative bottomSplitDESKTOP w-[91%] xl:flex flex-col h-[44%] ml-[1%] mr-auto'>
-            <Gameboy preserveAspectRatio="none" className="w-full absolute h-[75%] left-0 top-[7%]" />
-            {/* --- UPDATED: LEFT CONTROLS (PROJECT NAVIGATION) --- */}
-            <div className='absolute top-[14%] left-[0%] w-[18%] h-[60%]'>
-
-              {/* HEADER */}
-              <div className='absolute top-[10%] left-[55%] -translate-x-1/2 w-[120%] text-center'>
-                <span className='font-tiny5 text-[#e4bcff] text-xs tracking-widest uppercase animate-pulse drop-shadow-[0_0_5px_rgba(228,188,255,0.8)]'>
-                  ▼ Select Project
-                </span>
-              </div>
-
-              {/* 1. UP Arrow: EIDOLON (Fixed: Centered Horizontally, Lowered Vertically) */}
-              <a href="/eidolon" className='group absolute w-8 h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[48%] right-[37%] cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
-                <GameboyArrow className="absolute animate-pulse top-[15%] left-[18%] w-5 h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
-
-                {/* LABEL */}
-                <div className='absolute -top-7 animate-bounce left-1/2 -translate-x-1/2 flex flex-col items-center'>
-                  <span className='text-[10px] font-pixelify tracking-widest text-[#a0ff88] bg-black/60 px-1.5 rounded border border-[#a0ff88]/30 whitespace-nowrap drop-shadow-md'>
-                    EIDOLON
-                  </span>
+                    <span className="relative z-10 transition-transform duration-300 group-hover:-translate-x-0.5">View My Work</span>
+                    <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </a>
+                  <a
+                    href="/contact"
+                    className="group inline-flex h-[36px] w-[158px] rounded-[8px] bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 p-[1px] shadow-[0_0_10px_rgba(217,70,239,0.3)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(217,70,239,0.8)] active:scale-95"
+                  >
+                    <div className="relative flex h-full w-full items-center justify-center gap-3 overflow-hidden rounded-[7px] bg-[#050916] text-[0.8rem] font-medium text-fuchsia-100 transition-all duration-300 group-hover:bg-[#050916]/40 group-hover:text-white group-hover:shadow-[inset_0_0_15px_rgba(217,70,239,0.4)]">
+                      <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+                      <span className="relative z-10 transition-transform duration-300 group-hover:-translate-x-0.5">Let&apos;s Connect</span>
+                      <MessageCircle className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:scale-110 group-hover:text-pink-300" />
+                    </div>
+                  </a>
                 </div>
-              </a>
-
-              {/* 2. LEFT Arrow: SYZYGY (Fixed: Vertically Aligned with Right Arrow) */}
-              <a href="/syzygy" className='group absolute w-8 h-8 border-[#fffa88] rounded-full border-[1.5px] top-[62%] right-[54%] cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
-                <div className="-rotate-90 w-full animate-pulse  h-full relative">
-                  <GameboyArrow className="absolute top-[15%] left-[17%] w-5 h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
-                </div>
-
-                {/* LABEL */}
-                <div className='absolute top-[170%] animate-bounce -translate-y-1/2 -left-[100%] flex items-center justify-end w-16 pr-1'>
-                  <span className='text-[10px] font-pixelify tracking-widest text-[#fffa88] bg-black/60 px-1.5 rounded border border-[#fffa88]/30 whitespace-nowrap drop-shadow-md'>
-                    SYZYGY
-                  </span>
-                </div>
-              </a>
-
-              {/* 3. RIGHT Arrow: PRIMA (Fixed: Vertically Aligned with Left Arrow) */}
-              <a href="/prima" className='group absolute w-8 h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[62%] right-[20%] cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
-                <div className="rotate-90 w-full animate-pulse  h-full relative">
-                  <GameboyArrow className="absolute top-[15%] left-[17%] w-5 h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
-                </div>
-
-                {/* LABEL */}
-                <div className='absolute top-[170%] animate-bounce -translate-y-1/2 -right-[80%] flex items-center w-14 pl-1'>
-                  <span className='text-[10px] font-pixelify tracking-widest text-[#88a9ff] bg-black/60 px-1.5 rounded border border-[#88a9ff]/30 whitespace-nowrap drop-shadow-md'>
-                    PRIMA
-                  </span>
-                </div>
-              </a>
-
-              {/* 4. DOWN Arrow: Navigation Hint (Fixed: Centered Horizontally) */}
-              <div className='absolute w-8 h-8 border-[#ff8888]/30 rounded-full border-[1.5px] top-[76%] right-[37%] rotate-[180deg] opacity-50 pointer-events-none'>
-                <GameboyArrow className="absolute top-[15%] left-[17%] w-5 h-5 mx-auto [&_*]:fill-[#ff8888] [&_*]:stroke-[#ff8888]" />
-              </div>
-            </div>
-            <div className='absolute top-[14%] flex left-[18%] w-[64%] border-[#302433] bg-black/50 backdrop-blur-xl border-20 rounded-sm h-[60%]'>
-              {
-                gameboyIndex === 0 &&
-
-                <div className='flex w-full h-full'>
-                  <ArrowGlow onClick={() => { setGameboyIndex(subtractIndex(gameboyIndex)) }} className="w-[10%] h-[40%] my-auto cursor-pointer" />
-                  <div className='flex flex-col w-[90%] h-full mx-auto z-[50]'>
-                    <div className='flex w-full h-[25%] pt-auto font-tiny5 text-lg tracking-[0.25em] uppercase '>
-                      <span className='w-max  mx-auto mt-auto select-none'>Frontend Tech Stack</span>
-                    </div>
-                    <div className='w-full relative h-[75%] flex justify-between '>
-                      <div className='absolute bg-[#332936]/65 w-full h-[50%] rounded-[50%] top-[35%]'></div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[15%]'>
-                        <HTMLLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>HTML</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <TailwindCssLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Tailwind</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <ReactLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>React</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[9%]'>
-                        <ViteLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Vite</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[9%]'>
-                        <NextJSLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>NextJS</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <NodeJSLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>JS</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <TypeScriptLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Typescript</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[15%]'>
-                        <CSSLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>CSS</span>
-                      </div>
-                    </div>
-                  </div>
-                  <ArrowGlow onClick={() => { setGameboyIndex(addIndex(gameboyIndex)) }} className="w-[10%] h-[40%] rotate-180 my-auto cursor-pointer" />
-                </div>
-
-              }
-
-              {
-                gameboyIndex === 1 &&
-
-                <div className='flex w-full h-full relative'>
-                  <div className='absolute bg-[#332936]/65 w-[85%] h-[30%] rounded-[50%] top-[55%] left-[7.5%]'></div>
-                  <ArrowGlow onClick={() => { setGameboyIndex(subtractIndex(gameboyIndex)) }} className="w-[10%] h-[40%] my-auto" />
-                  <div className='flex flex-col w-[90%] h-full mx-auto z-[50]'>
-                    <div className='flex w-full h-[25%] pt-auto font-tiny5 text-lg tracking-[0.25em] uppercase '>
-                      <span className='w-max  mx-auto mt-auto select-none'>Backend Tech Stack</span>
-                    </div>
-                    <div className='w-full h-[75%] flex justify-between'>
-                      <div className='flex flex-col justify-center items-center -translate-y-[15%]'>
-                        <PostgreLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>PostgresSQL</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <MySQLLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>MySQL</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <FastApilogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>FastAPI</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[9%]'>
-                        <PHPlogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>PHP</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <ExpressLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Express</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <PrismaLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Prisma</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[15%]'>
-                        <LaravelLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Laravel</span>
-                      </div>
-                    </div>
-                  </div>
-                  <ArrowGlow onClick={() => { setGameboyIndex(addIndex(gameboyIndex)) }} className="w-[10%] h-[40%] rotate-180 my-auto" />
-                </div>
-
-              }
-
-              {
-                gameboyIndex === 2 &&
-
-                <div className='flex w-full h-full relative'>
-                  <div className='absolute bg-[#332936]/65 w-[55%] h-[30%] rounded-[50%] top-[55%] left-[22.5%]'></div>
-                  <ArrowGlow onClick={() => { setGameboyIndex(subtractIndex(gameboyIndex)) }} className="w-[10%] h-[40%] my-auto" />
-                  <div className='flex flex-col w-[90%] h-full mx-auto z-[50]'>
-                    <div className='flex w-full h-[25%] pt-auto font-tiny5 text-lg tracking-[0.25em] uppercase '>
-                      <span className='w-max  mx-auto mt-auto select-none'>Tools</span>
-                    </div>
-                    <div className='w-[60%] h-[75%] flex justify-between mx-auto'>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <AWSLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>AWS</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <DockerLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Docker</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[9%]'>
-                        <NginxLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Nginx</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center translate-y-[1%]'>
-                        <GitLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Git</span>
-                      </div>
-                      <div className='flex flex-col justify-center items-center -translate-y-[7%]'>
-                        <LinuxLogo className="w-8 h-8" />
-                        <span className='font-pixelify tracking-widest text-sm'>Linux</span>
-                      </div>
-                    </div>
-                  </div>
-                  <ArrowGlow onClick={() => { setGameboyIndex(addIndex(gameboyIndex)) }} className="w-[10%] h-[40%] rotate-180 my-auto" />
-                </div>
-
-              }
-
-
-            </div>
-            <div className='absolute top-[14%] right-[0%] w-[18%] h-[60%]'>
-              <div className='absolute w-8 h-8 border-[#ff8888]/50 rounded-full border-[1.5px] top-[13%] right-[36%]'><span className='absolute text-[#ff8888]/50 text-xl font-pixelify top-0 left-[29.5%]'>X</span></div>
-              <div className='absolute w-8 h-8 border-[#88a9ff]/50 rounded-full border-[1.5px] top-[27%] right-[54%] '><span className='absolute text-[#88a9ff]/50 text-xl font-pixelify top-0 left-[28.5%]'>Y</span></div>
-              <div className='absolute w-8 h-8 border-[#fffa88]/50 rounded-full border-[1.5px] top-[27%] right-[18%] '><span className='absolute text-[#fffa88]/50 text-xl font-pixelify top-0 left-[29.5%]'>A</span></div>
-              <div className='absolute w-8 h-8 border-[#a0ff88]/50 rounded-full border-[1.5px] top-[41%] right-[36%] '><span className='absolute text-[#a0ff88]/50 text-xl font-pixelify top-0 left-[29.5%]'>B</span></div>
-
-              <GameboyGrayButton className="absolute bottom-[11%] left-[13%] h-14 w-14" />
-
-            </div>
-          </div>
-
-          <div className='relative bottomSplitTABLETANDMOBILE grid grid xl:hidden w-full h-full my-[5%]'>
-            <TabletAndMobileViewSocialBox
-              preserveAspectRatio="none"
-              className="absolute top-0 w-full md:w-[90%] md:left-[5%] h-[12%] [clip-path:polygon(0%_0%,16%_0%,16%_50%,42%_50%,42%_0%,100%_0%,100%_100%,0%_100%)]"
-            />
-            <span className='absolute -top-[1%] md:-top-[1.5%] left-[17.5%] md:left-[20%] font-neoneon text-[#e4bcff] text-base md:text-3xl tracking-[.25em] pb-2 h-max w-max z-[50]'>
-              Socials:
-            </span>
-            <div className='absolute left-[2.5%] top-[2%] w-[95%] md:left-[7.5%] md:w-[85%] h-[8%] grid grid-cols-2 grid-rows-2 '>
-              {/* 1. Gmail */}
-              <a
-                href="mailto:minph7102004@gmail.com"
-                className='flex w-full h-full justify-start pl-[20%] items-center '>
-                <GmailIcon className="h-6 w-6 shrink-0" /> {/* Added shrink-0 */}
-                <span className='font-pixelify text-white ml-3 text-xs md:text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                  minph7102004@gmail.com
-                </span>
-              </a>
-
-              {/* 2. LinkedIn */}
-              <a
-                href="https://www.linkedin.com/in/min-paing-hein-676465245/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className='flex w-full h-full justify-start pl-[10%] pr-[10%] items-center'>
-                <LinkedInIcon className="h-6 w-6 shrink-0" /> {/* Added shrink-0 */}
-                <span className='font-pixelify text-white ml-3 text-xs md:text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                  https://www.linkedin.com/in/min-paing-hein-676465245/
-                </span>
-              </a>
-
-              {/* 3. Github */}
-              <a
-                href="https://github.com/False10101"
-                target="_blank"
-                rel="noopener noreferrer"
-                className='flex w-full h-full justify-start pl-[20%] pr-[5%] items-center'>
-                <GithubIcon className="h-6 w-6 shrink-0" /> {/* Added shrink-0 */}
-                <span className='font-pixelify text-white ml-3 text-xs md:text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                  https://github.com/False10101
-                </span>
-              </a>
-
-              {/* 4. Instagram */}
-              <a
-                href="https://instagram.com/minpaingheinn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className='flex w-full h-full justify-start pl-[10%] pr-[10%] items-center'>
-                <InstagramIcon className="h-6 w-6 shrink-0" /> {/* Added shrink-0 */}
-                <span className='font-pixelify text-white ml-3 text-xs md:text-sm truncate tracking-wide group-hover:text-[#e4bcff] group-hover:drop-shadow-[0_0_5px_rgba(228,188,255,0.8)] transition-all'>
-                  https://instagram.com/minpaingheinn
-                </span>
-              </a>
-            </div>
-
-            <MobileGameboy className="absolute top-[15%] w-full md:left-[5%] md:w-[90%] h-[40%]" />
-
-            {/* --- NEW CIRCULAR GAMEBOY SCREEN --- */}
-            <div className='gameboyinsides absolute w-[70%] h-[22%] top-[20%] left-[15%] border-12 border-[#302433] bg-black/30 backdrop-blur-xl flex flex-col items-center py-2 overflow-hidden rounded-sm'>
-
-              {/* Header Title */}
-              <div className='font-tiny5 text-white/90 text-[10px] md:text-xs tracking-[0.15em] uppercase mb-1 drop-shadow-md z-30'>
-                {gameboyIndex === 0 ? "FRONT END TECH STACK" : gameboyIndex === 1 ? "BACK END TECH STACK" : "TOOLS"}
-              </div>
-
-              {/* Content Container */}
-              <div className='relative w-full h-full px-4 pb-2'>
-
-                {/* Right Arrow Button */}
-
-                <button
-
-                  onClick={() => setGameboyIndex(subtractIndex(gameboyIndex))}
-
-                  className='absolute left-0 top-1/2 rotate-180 -translate-y-1/2 z-40 pl-3 md:pr-5 p-2 active:scale-90 transition-transform opacity-80 hover:opacity-100'
-
-                >
-
-                  <svg width="8" height="12" viewBox="0 0 10 16" fill="none" className="drop-shadow-[0_0_4px_rgba(255,255,255,0.8)]"><path d="M2 0H0V2H2V4H4V6H6V8H8V10H10V6H8V4H6V2H4V0H2Z" fill="white" /><path d="M2 16H0V14H2V12H4V10H6V8H8V6H10V10H8V12H6V14H4V16H2Z" fill="white" /></svg>
-
-                </button>
-
-                <button
-
-                  onClick={() => setGameboyIndex(addIndex(gameboyIndex))}
-
-                  className='absolute right-0 top-1/2 -translate-y-1/2 z-40 pl-3 md:pr-5 p-2 active:scale-90 transition-transform opacity-80 hover:opacity-100'
-
-                >
-
-                  <svg width="8" height="12" viewBox="0 0 10 16" fill="none" className="drop-shadow-[0_0_4px_rgba(255,255,255,0.8)]"><path d="M2 0H0V2H2V4H4V6H6V8H8V10H10V6H8V4H6V2H4V0H2Z" fill="white" /><path d="M2 16H0V14H2V12H4V10H6V8H8V6H10V10H8V12H6V14H4V16H2Z" fill="white" /></svg>
-
-                </button>
-
-                {/* The Shadow/Platform at bottom */}
-                <div className='absolute bottom-1 left-1/2 -translate-x-1/2 w-[70%] h-[15%] bg-[#332936] rounded-[100%]  pointer-events-none'></div>
-
-                {/* --- BACKEND (Circular Layout) --- */}
-                {gameboyIndex === 1 && (
-                  <div className="absolute inset-0 animate-fadeIn ">
-                    {/* Top */}
-                    <div className='absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <PHPlogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>PHP</span>
-                    </div>
-                    {/* Top Right */}
-                    <div className='absolute top-[12%] right-[26.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <ExpressLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>Express</span>
-                    </div>
-                    {/* Right */}
-                    <div className='absolute top-[50%] right-[14%] -translate-y-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <LaravelLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>Laravel</span>
-                    </div>
-                    {/* Bottom Right */}
-                    <div className='absolute bottom-[12%] right-[26.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <NextJSLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>NextJS</span>
-                    </div>
-                    {/* Bottom */}
-                    <div className='absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <MySQLLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>MySQL</span>
-                    </div>
-                    {/* Bottom Left */}
-                    <div className='absolute bottom-[12%] left-[27.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <PrismaLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>Prisma</span>
-                    </div>
-                    {/* Left */}
-                    <div className='absolute top-[50%] left-[12%] -translate-y-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <PostgreLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>Postgres</span>
-                    </div>
-                    {/* Top Left */}
-                    <div className='absolute top-[12%] left-[26.5%]  flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <FastApilogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1 whitespace-nowrap'>FastAPI</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* --- FRONTEND (Circular Layout) --- */}
-                {gameboyIndex === 0 && (
-                  <div className="absolute inset-0 animate-fadeIn ">
-                    {/* Center Piece */}
-
-                    {/* Orbiting Icons */}
-                    <div className='absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <NextJSLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>NextJS</span>
-                    </div>
-                    <div className='absolute top-[12%] left-[29.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <ReactLogo className="w-8 h-8 md:w-10 md:h-10 drop-shadow-[0_0_8px_rgba(97,218,251,0.6)]" />
-                      <span className='font-pixelify text-xs mt-1'>React</span>
-
-                    </div>
-                    <div className='absolute top-[12%] right-[29.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <ViteLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>Vite</span>
-
-                    </div>
-                    <div className='absolute top-[50%] right-[10%] md:right-[14%] -translate-y-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <TypeScriptLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>Typescript</span>
-
-                    </div>
-                    <div className='absolute bottom-[10%] md:bottom-[12%] right-[22.5%] md:right-[27.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <TailwindCssLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>TailwindCSS</span>
-
-                    </div>
-                    <div className='absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <NodeJSLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>NodeJS</span>
-
-                    </div>
-                    <div className='absolute bottom-[12%] left-[29.5%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <CSSLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>CSS</span>
-
-                    </div>
-                    <div className='absolute top-[50%] left-[15%] -translate-y-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <HTMLLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-xs mt-1'>HTML</span>
-
-                    </div>
-                  </div>
-                )}
-
-                {/* --- TOOLS (Circular Layout) --- */}
-                {gameboyIndex === 2 && (
-                  <div className="absolute inset-0 animate-fadeIn">
-                    <div className='absolute top-[35%] left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <AWSLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1'>AWS</span>
-                    </div>
-                    <div className='absolute top-[15%] right-[25%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <DockerLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1'>Docker</span>
-                    </div>
-                    <div className='absolute bottom-[15%] right-[25%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <NginxLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1'>Nginx</span>
-                    </div>
-                    <div className='absolute bottom-[15%] left-[25%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <LinuxLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1'>Linux</span>
-                    </div>
-                    <div className='absolute top-[15%] left-[25%] flex flex-col items-center scale-[0.65] md:scale-90'>
-                      <GitLogo className="w-8 h-8 md:w-10 md:h-10" />
-                      <span className='font-pixelify text-[8px] mt-1'>Git</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* --- CONTROLS SECTION (New Addition) --- */}
-            <div className='absolute top-[43%] w-full h-[10%] flex justify-around px-[10%] md:px-[15%] z-50'>
+            <div className="grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_68px] gap-3">
+              <section
+                className="relative min-h-0 overflow-hidden rounded-xl p-[1.5px] shadow-[-12px_-12px_30px_rgba(96,165,250,0.1),12px_12px_30px_rgba(217,70,239,0.1),0_5px_20px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+              >
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(96,165,250,0.6)_0%,rgba(139,92,246,0.5)_15%,#10162c_35%,#10162c_65%,rgba(236,72,153,0.5)_85%,rgba(217,70,239,0.6)_100%)] opacity-50" />
+                <div className="absolute -left-8 -top-8 z-0 h-40 w-40 rounded-full bg-blue-500/50 blur-[24px]" />
+                <div className="absolute -right-8 -bottom-8 z-0 h-40 w-40 rounded-full bg-fuchsia-500/50 blur-[24px]" />
+                <div className="relative z-10 h-full rounded-[10.5px] bg-[#0a1022] p-3">
+                  <Backlight />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_34%_69%,rgba(48,110,255,0.52),transparent_31%),radial-gradient(circle_at_100%_100%,rgba(168,64,255,0.36),transparent_28%)]" />
+                  <div className="relative grid h-full min-h-0 grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)] gap-5">
+                  <div className="relative min-h-0 overflow-hidden">
+                    <div className="absolute inset-x-[7%] bottom-[4%] h-[108px] rounded-full bg-blue-600/40 blur-[45px]" />
+                    <img
+                      src={ProfilePicture}
+                      alt="Min Paing Hein portrait"
+                      className="absolute bottom-[-42px] left-1/2 h-[310px] w-auto max-w-none -translate-x-1/2 object-contain mix-blend-lighten drop-shadow-[0_18px_28px_rgba(0,0,0,0.28)]"
+                    />
+                  </div>
 
-              {/* LEFT SIDE: D-PAD with Links */}
-              <div className="relative w-[35%] h-[70%]">
-                {/* UP Arrow: EIDOLON */}
-                <a href="/eidolon" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88] rounded-full border-[1.5px] top-[15%] left-[46.5%] -translate-x-1/2 cursor-pointer bg-[#a0ff88]/10 hover:bg-[#a0ff88]/30 transition-all shadow-[0_0_10px_rgba(160,255,136,0.2)]'>
-                  <GameboyArrow className="absolute animate-pulse md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#a0ff88] [&_*]:stroke-[#a0ff88]" />
-                  <div className='absolute -top-5 animate-bounce left-1/2 -translate-x-1/2 flex flex-col items-center'>
-                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#a0ff88] bg-black/60 px-1 rounded border border-[#a0ff88]/30 whitespace-nowrap drop-shadow-md'>
-                      EIDOLON
-                    </span>
+                  <div className="min-h-0 border-l border-blue-500/20 pl-4">
+                    <InfoItem
+                      icon={<MapPin className="h-5 w-5" />}
+                      label="Location"
+                      value="Bangkok, Thailand"
+                    />
+                    <InfoItem
+                      icon={<GraduationCap className="h-5 w-5" />}
+                      label="Study"
+                      value="King Mongkut's University of Technology Thonburi"
+                    />
+                    <InfoItem
+                      icon={<Code2 className="h-5 w-5" />}
+                      label="Focus"
+                      value="Web Development UI/UX Design"
+                    />
+                    <InfoItem
+                      icon={<UserRound className="h-5 w-5" />}
+                      label="Availability"
+                      value="Open to opportunities"
+                      last
+                    />
                   </div>
-                </a>
-
-                {/* LEFT Arrow: SYZYGY */}
-                <a href="/syzygy" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88] rounded-full border-[1.5px] top-[65%] left-[10%] -translate-y-1/2 cursor-pointer bg-[#fffa88]/10 hover:bg-[#fffa88]/30 transition-all shadow-[0_0_10px_rgba(255,250,136,0.2)]'>
-                  <div className="-rotate-90 animate-pulse w-full h-full relative">
-                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#fffa88] [&_*]:stroke-[#fffa88]" />
-                  </div>
-                  <div className='absolute animate-bounce top-[150%] left-[30%] -translate-x-1/2 flex items-center justify-center w-16'>
-                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#fffa88] bg-black/60 px-1 rounded border border-[#fffa88]/30 whitespace-nowrap drop-shadow-md'>
-                      SYZYGY
-                    </span>
-                  </div>
-                </a>
-
-                {/* RIGHT Arrow: PRIMA */}
-                <a href="/prima" className='group absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff] rounded-full border-[1.5px] top-[65%] right-[20%] -translate-y-1/2 cursor-pointer bg-[#88a9ff]/10 hover:bg-[#88a9ff]/30 transition-all shadow-[0_0_10px_rgba(136,169,255,0.2)]'>
-                  <div className="rotate-90 animate-pulse w-full h-full relative">
-                    <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#88a9ff] [&_*]:stroke-[#88a9ff]" />
-                  </div>
-                  <div className='absolute animate-bounce top-[150%] left-[70%] -translate-x-1/2 flex items-center justify-center w-14'>
-                    <span className='text-[8px] md:text-[10px] font-pixelify tracking-widest text-[#88a9ff] bg-black/60 px-1 rounded border border-[#88a9ff]/30 whitespace-nowrap drop-shadow-md'>
-                      PRIMA
-                    </span>
-                  </div>
-                </a>
-
-                {/* DOWN Arrow: Decoration */}
-                <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#ff8888]/30 rounded-full border-[1.5px] -bottom-[10%] left-[46.5%] -translate-x-1/2 rotate-[180deg] opacity-50 pointer-events-none'>
-                  <GameboyArrow className="absolute md:top-[15%] top-[5%] md:left-[17%] left-[5%] w-4 h-4 md:w-5 md:h-5 mx-auto [&_*]:fill-[#ff8888] [&_*]:stroke-[#ff8888]" />
                 </div>
-
-                <GameboyGrayButton className="absolute -right-6 -bottom-5 h-8 w-8 md:h-10 md:w-10 opacity-80 justify-end" />
-
-              </div>
-
-              {/* CENTER: +/- Pattern */}
-              <div className="relative w-[20%] h-full flex items-start justify-center pb-2 mt-3 ml-4">
-                <div className="grid grid-cols-3 gap-x-1 gap-y-1.5 md:gap-x-2 md:gap-y-2 place-items-center">
-
-                  {/* Row 1: Dash - Dot - Dash */}
-                  <div className="w-3 h-0.5 md:w-4 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-3 h-0.5 md:w-4 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-
-                  {/* Row 2: Dot - Dash - Dot */}
-                  <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-3 h-0.5 md:w-4 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-
-                  {/* Row 3: Dash - Dot - Dash */}
-                  <div className="w-3 h-0.5 md:w-4 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-                  <div className="w-3 h-0.5 md:w-4 md:h-1 bg-[#e4bcff] rounded-full shadow-[0_0_2px_rgba(228,188,255,0.8)]"></div>
-
                 </div>
-              </div>
+              </section>
 
-              {/* RIGHT SIDE: Action Buttons (X/Y/A/B) */}
-              <div className="relative w-[35%] h-[70%] mr-3">
-                <GameboyGrayButton className="absolute -left-2 -bottom-5 h-8 w-8 md:h-10 md:w-10 opacity-80 justify-end" />
-                <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#ff8888]/50 rounded-full border-[1.5px] top-[10%] left-[60%] -translate-x-1/2 flex items-center justify-center'><span className='text-[#ff8888]/50 text-xs md:text-xl font-pixelify'>X</span></div>
-                <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#88a9ff]/50 rounded-full border-[1.5px] top-[60%] left-[30%] -translate-y-1/2 flex items-center justify-center'><span className='text-[#88a9ff]/50 text-xs md:text-xl font-pixelify'>Y</span></div>
-                <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#fffa88]/50 rounded-full border-[1.5px] top-[60%] right-[10%] -translate-y-1/2 flex items-center justify-center'><span className='text-[#fffa88]/50 text-xs md:text-xl font-pixelify'>A</span></div>
-                <div className='absolute w-5 h-5 md:w-8 md:h-8 border-[#a0ff88]/50 rounded-full border-[1.5px] -bottom-[10%] left-[60%] -translate-x-1/2 flex items-center justify-center'><span className='text-[#a0ff88]/50 text-xs md:text-xl font-pixelify'>B</span></div>
-              </div>
-
+              <section
+                id="contact"
+                className="tech-tile-border relative min-h-0 min-w-0 overflow-hidden rounded-xl border border-blue-500/24 bg-[#0a1022]/76 p-2 backdrop-blur-xl"
+              >
+                <Backlight />
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="h-3 w-[3px] rounded-full bg-blue-400" />
+                  <h2 className="text-[0.78rem] font-semibold text-white">Contact</h2>
+                </div>
+                <div className="flex min-w-0 items-center gap-2">
+                  <ContactChip icon={<Mail className="h-4 w-4" />} label="minph7102004@gmail.com" href="mailto:minph7102004@gmail.com" />
+                  <ContactChip icon={<Phone className="h-4 w-4" />} label="+66 6 2032 2023" href="tel:+66620322023" />
+                  <ContactChip icon={<MapPin className="h-4 w-4" />} label="Bangkok, Thailand" href="https://maps.google.com/?q=Bangkok,+Thailand" />
+                  <div className="ml-auto flex items-center gap-2">
+                    <IconLink href="https://github.com/False10101" label="GitHub">
+                      <Github className="h-5 w-5" />
+                    </IconLink>
+                    <IconLink
+                      href="https://www.linkedin.com/in/min-paing-hein-676465245/"
+                      label="LinkedIn"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </IconLink>
+                    <IconLink href="https://instagram.com/minpaingheinn" label="Instagram">
+                      <Instagram className="h-5 w-5" />
+                    </IconLink>
+                    <IconLink href="mailto:minph7102004@gmail.com" label="Email">
+                      <Mail className="h-5 w-5" />
+                    </IconLink>
+                  </div>
+                </div>
+              </section>
             </div>
-          </div>
+        </section>
+
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_132px] gap-4">
+          <section id="projects" className="flex min-h-0 flex-col">
+            <SectionHeading title="Featured Projects" actionLabel="View all projects" />
+            <div className="mt-3 grid min-h-0 flex-1 gap-4 xl:grid-cols-3">
+              {projects.map((project) => (
+                <ProjectCard key={project.title} project={project} />
+              ))}
+            </div>
+          </section>
+
+          <section id="skills" className="flex min-h-0 flex-col">
+            <SectionHeading title="Tech Stack" />
+            <div className="mt-3 grid min-h-0 flex-1 grid-cols-13 gap-3">
+              {techStack.map((tech) => (
+                <TechTile key={tech.label} tech={tech} />
+              ))}
+            </div>
+          </section>
         </div>
       </div>
-
     </main>
   )
 }
 
-const DownloadIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-    <polyline points="7 10 12 15 17 10"></polyline>
-    <line x1="12" y1="15" x2="12" y2="3"></line>
-  </svg>
-);
+function SectionHeading({
+  title,
+  actionLabel,
+}: {
+  title: string
+  actionLabel?: string
+}) {
+  return (
+    <div className="flex min-h-[24px] flex-wrap items-center gap-3 sm:gap-4">
+      <div className="section-title-mark h-4 w-[4px] shrink-0 rounded-full" />
+      <h2 className="text-[1rem] font-semibold tracking-[0] text-white drop-shadow-[0_0_10px_rgba(96,165,250,0.20)]">{title}</h2>
+      <div className="neon-horizontal-line h-px min-w-[80px] flex-1" />
+      {actionLabel ? (
+        <a
+          href="/projects"
+          className="group relative inline-flex shrink-0 items-center gap-2 text-[0.82rem] text-slate-300 transition-all duration-300 hover:-translate-y-[1px] hover:text-blue-200 hover:drop-shadow-[0_0_12px_rgba(147,197,253,0.5)] active:translate-y-0 active:scale-95"
+        >
+          <span className="absolute inset-x-[-10px] inset-y-[-6px] z-0 scale-90 rounded-full bg-gradient-to-r from-blue-500/10 to-violet-500/10 opacity-0 ring-1 ring-inset ring-blue-400/20 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" />
+          <span className="relative z-10">{actionLabel}</span>
+          <ArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+        </a>
+      ) : null}
+    </div>
+  )
+}
+
+function MpLogo() {
+  return (
+    <svg
+      aria-label="MP"
+      className="h-[28px] w-[45px] overflow-visible drop-shadow-[0_0_10px_rgba(96,165,250,0.72)]"
+      role="img"
+      viewBox="0 0 58 34"
+    >
+      <defs>
+        <linearGradient id="mpLogoGradient" x1="4" x2="54" y1="8" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#60a5fa" />
+          <stop offset="0.48" stopColor="#3b82f6" />
+          <stop offset="1" stopColor="#8b5cf6" />
+        </linearGradient>
+        <filter id="mpLogoGlow" x="-35%" y="-55%" width="170%" height="210%">
+          <feGaussianBlur stdDeviation="1.45" result="blur" />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="0 0 0 0 0.28 0 0 0 0 0.56 0 0 0 0 1 0 0 0 0.62 0"
+          />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#mpLogoGlow)" transform="skewX(-9)">
+        <text
+          fill="url(#mpLogoGradient)"
+          fontFamily="Arial Black, Arial, sans-serif"
+          fontSize="29"
+          fontStyle="italic"
+          fontWeight="900"
+          letterSpacing="-8"
+          x="6"
+          y="28"
+        >
+          MP
+        </text>
+      </g>
+    </svg>
+  )
+}
+
+function InfoItem({
+  icon,
+  label,
+  value,
+  last,
+}: {
+  icon: ReactNode
+  label: string
+  value: ReactNode
+  last?: boolean
+}) {
+  return (
+    <div className={`flex gap-3 py-[7px] ${last ? '' : 'border-b border-blue-500/16'}`}>
+      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-400/12 text-blue-200 shadow-[inset_0_0_16px_rgba(96,165,250,0.12),0_0_14px_rgba(139,92,246,0.12)]">
+        {icon}
+      </div>
+      <div>
+        <p className="text-[0.68rem] leading-3 text-slate-400">{label}</p>
+        <p className="mt-1 max-w-[230px] text-[0.73rem] leading-[1.2] text-white">
+          {value}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ContactChip({ icon, label, href }: { icon: ReactNode; label: string; href?: string }) {
+  if (href) {
+    const isMailOrTel = href.startsWith('mailto:') || href.startsWith('tel:')
+    return (
+      <a
+        href={href}
+        target={isMailOrTel ? undefined : '_blank'}
+        rel={isMailOrTel ? undefined : 'noopener noreferrer'}
+        className="group relative inline-flex h-[28px] max-w-full min-w-0 items-center rounded-md bg-blue-500/24 p-[1px] transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.6)] active:scale-95"
+      >
+        <span className="absolute inset-0 z-0 rounded-md bg-gradient-to-br from-blue-400 via-indigo-500 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="relative flex h-full w-full items-center gap-2 overflow-hidden rounded-[5px] bg-[#060b19] px-2 text-[0.68rem] text-slate-200 transition-all duration-300 group-hover:bg-[#060b19]/40 group-hover:text-white group-hover:shadow-[inset_0_0_10px_rgba(59,130,246,0.4)]">
+          <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+          <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-[1px] group-hover:text-blue-300">{icon}</span>
+          <span className="relative z-10 truncate whitespace-nowrap transition-transform duration-300 group-hover:translate-x-[1px] group-hover:text-blue-100">{label}</span>
+        </div>
+      </a>
+    )
+  }
+
+  return (
+    <div className="inline-flex h-[28px] max-w-full min-w-0 items-center gap-2 rounded-md border border-blue-500/24 bg-[#060b19] px-2 text-[0.68rem] text-slate-200">
+      <span className="text-slate-200">{icon}</span>
+      <span className="truncate whitespace-nowrap">{label}</span>
+    </div>
+  )
+}
+
+function IconLink({
+  href,
+  label,
+  children,
+}: {
+  href: string
+  label: string
+  children: ReactNode
+}) {
+  const isMail = href.startsWith('mailto:')
+
+  return (
+    <a
+      href={href}
+      target={isMail ? undefined : '_blank'}
+      rel={isMail ? undefined : 'noopener noreferrer'}
+      aria-label={label}
+      title={label}
+      className="group relative inline-flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-md bg-blue-500/24 p-[1px] transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.6)] active:scale-95"
+    >
+      <span className="absolute inset-0 z-0 rounded-md bg-gradient-to-br from-blue-400 via-indigo-500 to-violet-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[5px] bg-[#060b19] text-white/90 transition-all duration-300 group-hover:bg-[#060b19]/40 group-hover:text-white group-hover:shadow-[inset_0_0_10px_rgba(59,130,246,0.4)]">
+        <span className="absolute inset-0 z-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
+        <span className="relative z-10 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300">{children}</span>
+      </div>
+    </a>
+  )
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <a
+      href={project.href}
+      className="project-card-border group relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-xl border border-blue-500/35 bg-[#0a1024]/72 p-3 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:shadow-[0_8px_24px_rgba(59,130,246,0.15)] active:translate-y-0 active:scale-[0.98] sm:flex-row"
+    >
+      <Backlight />
+
+      <div className="relative z-10 h-[170px] w-full shrink-0 overflow-hidden rounded-md border border-blue-500/18 bg-black/35 sm:h-[150px] sm:w-[190px] xl:h-[160px] xl:w-[205px]">
+        <img
+          src={project.image}
+          alt={project.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+        />
+      </div>
+
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
+        <h3 className="text-[0.93rem] font-semibold leading-tight text-white">{project.title}</h3>
+        <p className="mt-1.5 text-[0.72rem] leading-[1.42] text-slate-300">
+          {project.description}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-1">
+          {project.tags.map((tag) => (
+            <span
+              key={tag.label}
+              className={`rounded px-1.5 py-0.5 text-[0.62rem] leading-none ${tag.tone}`}
+            >
+              {tag.label}
+            </span>
+          ))}
+        </div>
+      </div>
+    </a>
+  )
+}
+
+function TechTile({ tech }: { tech: Tech }) {
+  return (
+    <div
+      className="tech-tile-border relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-lg border border-blue-500/24 bg-[#0a1022]/76 px-2 py-3 backdrop-blur-xl select-none"
+    >
+      <Backlight intensity="subtle" />
+      <CustomTechIcon type={tech.custom} />
+      <p className="mt-1.5 max-w-full truncate px-1 text-center text-[0.63rem] leading-none text-white">
+        {tech.label}
+      </p>
+    </div>
+  )
+}
+
+function CustomTechIcon({ type }: { type: Tech['custom'] }) {
+  const iconClass = 'h-[30px] w-[30px] overflow-visible'
+
+  if (type === 'html' || type === 'css') {
+    const text = type === 'html' ? '5' : '3'
+    const color = type === 'html' ? '#fb7185' : '#60a5fa'
+
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <path
+          d="M5.8 5h24.4l-2.4 22.8L18 32 8.2 27.8 5.8 5Z"
+          fill={`${color}24`}
+          stroke={color}
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path d="M11.5 11h13M12.5 17h11M14.5 23l3.5 1.7 3.5-1.7" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
+        <text x="18" y="22" textAnchor="middle" className="fill-white text-[12px] font-black">
+          {text}
+        </text>
+      </svg>
+    )
+  }
+
+  if (type === 'typescript') {
+    return (
+      <span className="flex h-[30px] w-[30px] items-end justify-end rounded-md border border-sky-300/80 bg-sky-400/15 px-1 pb-1 text-[0.72rem] font-black leading-none text-sky-100 shadow-[0_0_14px_rgba(56,189,248,0.25)]">
+        TS
+      </span>
+    )
+  }
+
+  if (type === 'react') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <g fill="none" stroke="#67e8f9" strokeWidth="1.8">
+          <ellipse cx="18" cy="18" rx="14" ry="5.3" />
+          <ellipse cx="18" cy="18" rx="14" ry="5.3" transform="rotate(60 18 18)" />
+          <ellipse cx="18" cy="18" rx="14" ry="5.3" transform="rotate(120 18 18)" />
+        </g>
+        <circle cx="18" cy="18" r="3" fill="#67e8f9" />
+      </svg>
+    )
+  }
+
+  if (type === 'next') {
+    return (
+      <span className="relative flex h-[30px] w-[30px] items-center justify-center rounded-full border border-blue-400/45 bg-blue-500/8 text-[0.78rem] font-black text-white">
+        N
+        <span className="absolute bottom-[6px] right-[7px] h-[13px] w-px rotate-[-30deg] bg-white/80" />
+      </span>
+    )
+  }
+
+  if (type === 'tailwind') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <path
+          d="M7 19c2.6-7 7.8-7 10.4-4.2 1.6 1.7 2.8 2.8 5.1 2.8 2.2 0 4-1.1 5.5-3.2-2.6 7-7.8 7-10.4 4.2-1.6-1.7-2.8-2.8-5.1-2.8-2.2 0-4 1.1-5.5 3.2Zm1 8c2.6-7 7.8-7 10.4-4.2 1.6 1.7 2.8 2.8 5.1 2.8 2.2 0 4-1.1 5.5-3.2-2.6 7-7.8 7-10.4 4.2-1.6-1.7-2.8-2.8-5.1-2.8-2.2 0-4 1.1-5.5 3.2Z"
+          fill="#22d3ee"
+        />
+      </svg>
+    )
+  }
+
+  if (type === 'node') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <path
+          d="M18 4 30 11v14l-12 7L6 25V11L18 4Z"
+          fill="#22c55e22"
+          stroke="#86efac"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <text x="18" y="22" textAnchor="middle" className="fill-green-100 text-[9px] font-black">
+          JS
+        </text>
+      </svg>
+    )
+  }
+
+  if (type === 'express') {
+    return <span className="text-[1.45rem] font-light leading-none text-white/90">ex</span>
+  }
+
+  if (type === 'postgres') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <path
+          d="M9 11c0-3.3 4-6 9-6s9 2.7 9 6v14c0 3.3-4 6-9 6s-9-2.7-9-6V11Z"
+          fill="#60a5fa18"
+          stroke="#93c5fd"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M9 11c0 3.3 4 6 9 6s9-2.7 9-6M9 18c0 3.3 4 6 9 6s9-2.7 9-6"
+          stroke="#bfdbfe"
+          strokeWidth="1.7"
+        />
+        <text x="18" y="22" textAnchor="middle" className="fill-blue-100 text-[8px] font-black">
+          PG
+        </text>
+      </svg>
+    )
+  }
+
+  if (type === 'prisma') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <path
+          d="M18 4 29 29 8 33 18 4Z"
+          fill="#a78bfa24"
+          stroke="#c4b5fd"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path d="M18 8 13 28l11-2L18 8Z" fill="#c4b5fd" opacity="0.8" />
+      </svg>
+    )
+  }
+
+  if (type === 'docker') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <g fill="#7dd3fc">
+          <rect x="7" y="15" width="5" height="4" rx="0.8" />
+          <rect x="13" y="15" width="5" height="4" rx="0.8" />
+          <rect x="19" y="15" width="5" height="4" rx="0.8" />
+          <rect x="13" y="10" width="5" height="4" rx="0.8" />
+          <rect x="19" y="10" width="5" height="4" rx="0.8" />
+        </g>
+        <path d="M6 20h23c-.7 5.4-4.3 8-10.8 8H15c-4.7 0-7.7-2.4-9-8Z" fill="#38bdf833" stroke="#7dd3fc" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M27 17.5c1.8-.7 3.1-.3 4 1" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    )
+  }
+
+  if (type === 'aws') {
+    return (
+      <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+        <text x="18" y="17" textAnchor="middle" className="fill-orange-100 text-[11px] font-black">
+          AWS
+        </text>
+        <path d="M9 22c5.2 4.2 12.3 4.4 18.4.3" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+        <path d="M25 20.8 28 22l-1 3" stroke="#fbbf24" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg viewBox="0 0 36 36" className={iconClass} aria-hidden="true">
+      <path d="M18 5 31 18 18 31 5 18 18 5Z" fill="#fb718522" stroke="#fda4af" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M14 14h7M18 14v10M18 20h5" stroke="#fecdd3" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="14" cy="14" r="2" fill="#fecdd3" />
+      <circle cx="18" cy="24" r="2" fill="#fecdd3" />
+      <circle cx="23" cy="20" r="2" fill="#fecdd3" />
+    </svg>
+  )
+}
 
 export default App
-
-
