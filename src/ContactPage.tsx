@@ -366,43 +366,45 @@ function CloudyIconBox({ icon: Icon, className }: { icon: ComponentType<SVGProps
 function MpLogo() {
   return (
     <svg
-      aria-label="MP"
-      className="h-[28px] w-[45px] overflow-visible drop-shadow-[0_0_10px_rgba(96,165,250,0.72)]"
+      aria-label="MP Logo"
+      className="h-[28px] w-[28px] overflow-visible drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]"
       role="img"
-      viewBox="0 0 58 34"
+      viewBox="0 0 40 40"
     >
       <defs>
-        <linearGradient id="mpLogoGradientContact" x1="4" x2="54" y1="8" y2="24" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#60a5fa" />
-          <stop offset="0.48" stopColor="#3b82f6" />
-          <stop offset="1" stopColor="#8b5cf6" />
+        <linearGradient id="mLogoLeftContact" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#22d3ee" />
+          <stop offset="100%" stopColor="#3b82f6" />
         </linearGradient>
-        <filter id="mpLogoGlowContact" x="-35%" y="-55%" width="170%" height="210%">
+        <linearGradient id="mLogoRightContact" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#e879f9" />
+          <stop offset="100%" stopColor="#8b5cf6" />
+        </linearGradient>
+        <filter id="mLogoGlowContact" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="1.45" result="blur" />
-          <feColorMatrix
-            in="blur"
-            type="matrix"
-            values="0 0 0 0 0.28 0 0 0 0 0.56 0 0 0 0 1 0 0 0 0.62 0"
-          />
           <feMerge>
-            <feMergeNode />
+            <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
       </defs>
-      <g filter="url(#mpLogoGlowContact)" transform="skewX(-9)">
-        <text
-          fill="url(#mpLogoGradientContact)"
-          fontFamily="Arial Black, Arial, sans-serif"
-          fontSize="29"
-          fontStyle="italic"
-          fontWeight="900"
-          letterSpacing="-8"
-          x="6"
-          y="28"
-        >
-          MP
-        </text>
+      <g filter="url(#mLogoGlowContact)">
+        <path
+          d="M 6 33 L 14 11 L 24 25"
+          fill="none"
+          stroke="url(#mLogoLeftContact)"
+          strokeWidth="5.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M 34 33 L 26 11 L 16 25"
+          fill="none"
+          stroke="url(#mLogoRightContact)"
+          strokeWidth="5.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </g>
     </svg>
   )
