@@ -1,3 +1,4 @@
+import { lazy, Suspense, useId } from 'react'
 import {
   BriefcaseBusiness,
   Clock3,
@@ -9,11 +10,11 @@ import {
   Send,
   Phone,
 } from 'lucide-react'
-import { useId } from 'react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
-import Dither from './components/Dither'
 import { Backlight } from './components/Backlight'
 import MyResume from './assets/resume/Min Paing Hein CV.pdf'
+
+const Dither = lazy(() => import('./components/Dither'))
 
 const navItems = ['Home', 'Projects', 'Contact']
 
@@ -75,16 +76,18 @@ export default function ContactPage() {
   return (
     <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#020713] font-sans text-white antialiased">
       <div className="absolute inset-0 opacity-35">
-        <Dither
-          waveColor={[0.03, 0.09, 0.36]}
-          disableAnimation={false}
-          enableMouseInteraction={false}
-          colorNum={5}
-          pixelSize={2}
-          waveAmplitude={0.2}
-          waveFrequency={2.2}
-          waveSpeed={0.025}
-        />
+        <Suspense fallback={null}>
+          <Dither
+            waveColor={[0.03, 0.09, 0.36]}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            colorNum={5}
+            pixelSize={2}
+            waveAmplitude={0.2}
+            waveFrequency={2.2}
+            waveSpeed={0.025}
+          />
+        </Suspense>
       </div>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-90">

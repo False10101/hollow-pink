@@ -1,4 +1,4 @@
-import { useMemo, useState, useId } from 'react'
+import { lazy, Suspense, useMemo, useState, useId } from 'react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 import {
@@ -23,37 +23,37 @@ import {
   Database,
   Zap,
 } from 'lucide-react'
-import Dither from './components/Dither'
 import { Backlight } from './components/Backlight'
 import MyResume from './assets/resume/Min Paing Hein CV.pdf'
+const Dither = lazy(() => import('./components/Dither'))
 
-import dashboardShot from '../docs/images/syzygy/dashboard-shot.png'
-import newscanShot from '../docs/images/syzygy/newscan-shot.png'
-import analysisShot from '../docs/images/syzygy/analysis-shot.png'
-import explanationShot from '../docs/images/syzygy/explanation-shot.png'
-import profileShot from '../docs/images/syzygy/profile-shot.png'
+import dashboardShot from '../docs/images/syzygy/dashboard-shot.avif'
+import newscanShot from '../docs/images/syzygy/newscan-shot.avif'
+import analysisShot from '../docs/images/syzygy/analysis-shot.avif'
+import explanationShot from '../docs/images/syzygy/explanation-shot.avif'
+import profileShot from '../docs/images/syzygy/profile-shot.avif'
 
-import PrimaPage1 from './assets/Screenshots/Prima/1.png'
-import PrimaPage2 from './assets/Screenshots/Prima/2.png'
-import PrimaPage3 from './assets/Screenshots/Prima/3.png'
-import PrimaPage4 from './assets/Screenshots/Prima/4.png'
-import PrimaPage5 from './assets/Screenshots/Prima/5.png'
-import hero from '../docs/images/eidolon/hero.png'
-import noteList from '../docs/images/eidolon/note-list.png'
-import noteNew1 from '../docs/images/eidolon/note-new-1.png'
-import noteNew2 from '../docs/images/eidolon/note-new-2.png'
-import noteViewer from '../docs/images/eidolon/note-viewer.png'
-import noteFullscreen from '../docs/images/eidolon/note-fullscreen.png'
-import transcriptorUpload from '../docs/images/eidolon/transcriptor-upload.png'
-import transcriptorViewer from '../docs/images/eidolon/transcriptor-viewer.png'
-import audioConverter from '../docs/images/eidolon/audio-converter.png'
-import examPrepNew from '../docs/images/eidolon/exam-prep-new.png'
-import examPrepList from '../docs/images/eidolon/exam-prep-list.png'
-import examPrepViewer from '../docs/images/eidolon/exam-prep-viewer.png'
-import examPrepFullscreen from '../docs/images/eidolon/exam-prep-fullscreen.png'
-import groups from '../docs/images/eidolon/groups.png'
-import topup from '../docs/images/eidolon/topup.png'
-import admin from '../docs/images/eidolon/admin.png'
+import PrimaPage1 from './assets/Screenshots/Prima/1.avif'
+import PrimaPage2 from './assets/Screenshots/Prima/2.avif'
+import PrimaPage3 from './assets/Screenshots/Prima/3.avif'
+import PrimaPage4 from './assets/Screenshots/Prima/4.avif'
+import PrimaPage5 from './assets/Screenshots/Prima/5.avif'
+import hero from '../docs/images/eidolon/hero.avif'
+import noteList from '../docs/images/eidolon/note-list.avif'
+import noteNew1 from '../docs/images/eidolon/note-new-1.avif'
+import noteNew2 from '../docs/images/eidolon/note-new-2.avif'
+import noteViewer from '../docs/images/eidolon/note-viewer.avif'
+import noteFullscreen from '../docs/images/eidolon/note-fullscreen.avif'
+import transcriptorUpload from '../docs/images/eidolon/transcriptor-upload.avif'
+import transcriptorViewer from '../docs/images/eidolon/transcriptor-viewer.avif'
+import audioConverter from '../docs/images/eidolon/audio-converter.avif'
+import examPrepNew from '../docs/images/eidolon/exam-prep-new.avif'
+import examPrepList from '../docs/images/eidolon/exam-prep-list.avif'
+import examPrepViewer from '../docs/images/eidolon/exam-prep-viewer.avif'
+import examPrepFullscreen from '../docs/images/eidolon/exam-prep-fullscreen.avif'
+import groups from '../docs/images/eidolon/groups.avif'
+import topup from '../docs/images/eidolon/topup.avif'
+import admin from '../docs/images/eidolon/admin.avif'
 
 type ProjectRecord = {
   title: string
@@ -692,16 +692,18 @@ export default function ProjectPage() {
       `}</style>
 
       <div className="absolute inset-0 opacity-35">
-        <Dither
-          waveColor={[0.03, 0.09, 0.36]}
-          disableAnimation={false}
-          enableMouseInteraction={false}
-          colorNum={5}
-          pixelSize={2}
-          waveAmplitude={0.2}
-          waveFrequency={2.2}
-          waveSpeed={0.025}
-        />
+        <Suspense fallback={null}>
+          <Dither
+            waveColor={[0.03, 0.09, 0.36]}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            colorNum={5}
+            pixelSize={2}
+            waveAmplitude={0.2}
+            waveFrequency={2.2}
+            waveSpeed={0.025}
+          />
+        </Suspense>
       </div>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-90">
@@ -839,11 +841,15 @@ export default function ProjectPage() {
                       <img
                         src={activeSlide.image}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 h-full w-full scale-[1.2] object-cover opacity-65 blur-2xl transition-all duration-500"
                       />
                       <img
                         src={activeSlide.image}
                         alt={activeSlide.title}
+                        loading="lazy"
+                        decoding="async"
                         className="relative z-10 max-h-[88%] w-auto max-w-[92%] rounded-[6px] border border-white/10 object-contain shadow-[0_15px_35px_rgba(0,0,0,0.8)] transition-all duration-500"
                       />
                     </>
@@ -936,6 +942,7 @@ export default function ProjectPage() {
             <img
               src={activeSlide.image}
               alt={activeSlide.title}
+              decoding="async"
               className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />

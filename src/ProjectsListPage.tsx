@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import {
   ArrowRight,
@@ -11,12 +11,11 @@ import {
   RadioTower,
   Sparkles,
 } from 'lucide-react'
-import Dither from './components/Dither'
 import { Backlight } from './components/Backlight'
 import MyResume from './assets/resume/Min Paing Hein CV.pdf'
-import EidolonPreview from './assets/Screenshots/Eidolon/1.png'
-import SyzygyPreview from './assets/Screenshots/Syzygy/1.png'
-import PrimaPreview from './assets/Screenshots/Prima/1.png'
+import EidolonPreview from '../docs/images/eidolon/note-viewer.avif'
+import SyzygyPreview from './assets/Screenshots/Syzygy/1.avif'
+import PrimaPreview from './assets/Screenshots/Prima/1.avif'
 
 type ProjectCategory = 'All' | 'Completed' | 'In Progress'
 
@@ -136,6 +135,8 @@ const projects: ProjectEntry[] = [
   },
 ]
 
+const Dither = lazy(() => import('./components/Dither'))
+
 export default function ProjectsListPage() {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('All')
 
@@ -169,16 +170,18 @@ export default function ProjectsListPage() {
       `}</style>
 
       <div className="absolute inset-0 opacity-35">
-        <Dither
-          waveColor={[0.03, 0.09, 0.36]}
-          disableAnimation={false}
-          enableMouseInteraction={false}
-          colorNum={5}
-          pixelSize={2}
-          waveAmplitude={0.2}
-          waveFrequency={2.2}
-          waveSpeed={0.025}
-        />
+        <Suspense fallback={null}>
+          <Dither
+            waveColor={[0.03, 0.09, 0.36]}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            colorNum={5}
+            pixelSize={2}
+            waveAmplitude={0.2}
+            waveFrequency={2.2}
+            waveSpeed={0.025}
+          />
+        </Suspense>
       </div>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-90">
@@ -333,6 +336,8 @@ function ProjectRow({ project }: { project: ProjectEntry }) {
             <img
               src={project.image}
               alt={project.title}
+              loading="lazy"
+              decoding="async"
               className="h-[128px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] xl:h-[112px]"
             />
           ) : (

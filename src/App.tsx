@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import type { ReactNode } from 'react'
 import {
   ArrowRight,
@@ -13,14 +14,13 @@ import {
   Phone,
   UserRound,
 } from 'lucide-react'
-import Dither from './components/Dither'
 import { Backlight } from './components/Backlight'
 import MyResume from './assets/resume/Min Paing Hein CV.pdf'
-import EidolonPreview from '../docs/images/eidolon/note-viewer.png'
-import SyzygyPreview from '../docs/images/syzygy/analysis-shot.png'
-import PrimaPreview from './assets/Screenshots/Prima/1.png'
+import EidolonPreview from '../docs/images/eidolon/note-viewer.avif'
+import SyzygyPreview from '../docs/images/syzygy/analysis-shot.avif'
+import PrimaPreview from './assets/Screenshots/Prima/1.avif'
 
-import ProfilePicture from './assets/Social Box Desptop view everything/3.png'
+import ProfilePicture from './assets/Social Box Desptop view everything/3.avif'
 
 type Project = {
   title: string
@@ -106,20 +106,24 @@ const techStack: Tech[] = [
   { label: 'Git', custom: 'git' },
 ]
 
+const Dither = lazy(() => import('./components/Dither'))
+
 function App() {
   return (
     <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#020713] font-sans text-white antialiased">
       <div className="absolute inset-0 opacity-35">
-        <Dither
-          waveColor={[0.03, 0.09, 0.36]}
-          disableAnimation={false}
-          enableMouseInteraction={false}
-          colorNum={5}
-          pixelSize={2}
-          waveAmplitude={0.2}
-          waveFrequency={2.2}
-          waveSpeed={0.025}
-        />
+        <Suspense fallback={null}>
+          <Dither
+            waveColor={[0.03, 0.09, 0.36]}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            colorNum={5}
+            pixelSize={2}
+            waveAmplitude={0.2}
+            waveFrequency={2.2}
+            waveSpeed={0.025}
+          />
+        </Suspense>
       </div>
 
       {/* Deep Space Nebula Background */}
@@ -290,6 +294,8 @@ function App() {
                     <img
                       src={ProfilePicture}
                       alt="Min Paing Hein portrait"
+                      decoding="async"
+                      fetchPriority="high"
                       className="absolute bottom-[-42px] left-1/2 h-[310px] w-auto max-w-none -translate-x-1/2 object-contain mix-blend-lighten drop-shadow-[0_18px_28px_rgba(0,0,0,0.28)]"
                     />
                   </div>
@@ -546,6 +552,8 @@ function ProjectCard({ project }: { project: Project }) {
         <img
           src={project.image}
           alt={project.title}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
         />
       </div>

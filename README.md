@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+# Hollow Pink
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio built with React, TypeScript, Vite, and Tailwind CSS. The site showcases featured projects, detailed case-study pages, and contact information in a single fast client-side app.
 
-Currently, two official plugins are available:
+## Highlights
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Landing page with featured projects and profile summary
+- Dedicated projects index with status tags and tech stacks
+- Detailed case-study pages for Eidolon, Syzygy, and Prima
+- Animated UI with custom visual components and neon-styled presentation
+- Production image optimization using AVIF assets for faster loads
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Tailwind CSS v4
+- Lucide React
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open the local Vite URL shown in the terminal.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Production Build
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+The production bundle is generated in `dist/`.
+
+## Routes
+
+- `/` home page
+- `/projects` project listing
+- `/projects/:id` project detail page
+- `/contact` contact page
+
+## Featured Project Previews
+
+### Eidolon
+
+![Eidolon dashboard](docs/images/eidolon/hero.png)
+
+### Syzygy
+
+![Syzygy dashboard](docs/images/syzygy/dashboard-shot.png)
+
+### Prima
+
+![Prima workflow](src/assets/Screenshots/Prima/1.png)
+
+## Project Structure
+
+```text
+src/
+  components/        reusable UI and visual effects
+  assets/            fonts, screenshots, resume, icons
+  App.tsx            landing page
+  ProjectsListPage.tsx
+  ProjectPage.tsx
+  ContactPage.tsx
+  main.tsx           router entry point
+docs/images/         long-form project screenshots used in case studies
+```
+
+## Notes
+
+- This is a client-rendered SPA using `BrowserRouter`.
+- Static assets are bundled by Vite.
+- Large screenshots used in the UI have been converted to AVIF to reduce transfer size in production.
